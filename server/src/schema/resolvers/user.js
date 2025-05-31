@@ -1,38 +1,15 @@
 export const userResolvers = {
   Query: {
-    getUsers: async (_, __, { prisma }) => {
-      return await prisma.user.findMany();
+    getUsers: async (_, __, { userService }) => {
+      return await userService.getUsers();
     },
-    getUserById: async (_, { id }, { prisma }) => {
-      return await prisma.user.findUnique({
-        where: { id: id },
-      });
+    getUserById: async (_, { id }, { userService }) => {
+      return await userService.getUserById(id);
     },
   },
   Mutation: {
-    addUser: async (
-      _,
-      { email, password, firstName, lastName, address, phoneNumber },
-      { prisma }
-    ) => {
-      console.log("Adding user:", {
-        email,
-        password,
-        firstName,
-        lastName,
-        address,
-        phoneNumber,
-      });
-      return await prisma.user.create({
-        data: {
-          email,
-          password,
-          firstName,
-          lastName,
-          address,
-          phoneNumber,
-        },
-      });
+    addUser: async (_, data, { userService }) => {
+      return await userService.createUser(data);
     },
   },
 };

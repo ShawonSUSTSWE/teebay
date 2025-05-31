@@ -5,6 +5,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import prisma from "./src/config/DB.js";
 import { schema } from "./src/schema/schema.js";
+import { createServices } from "./src/services/index.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
@@ -20,7 +21,13 @@ await server.start();
 app.use(
   "/graphql",
   expressMiddleware(server, {
-    context: async ({ req, res }) => ({ prisma }),
+    context: async ({ req, res }) => {
+      const services = createServices(prisma);
+      return {
+        prisma,
+        ...services,
+      };
+    },
   })
 );
 

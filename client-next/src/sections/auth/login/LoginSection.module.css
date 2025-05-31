@@ -1,0 +1,36 @@
+.container {
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-top: -30px;
+}
+
+.form {
+  width: 25%;
+}
+
+.input {
+  width: 75% !important;
+}
+
+.login-btn {
+  margin-top: 20px;
+}
+
+.signup-link {
+  font-size: 12px;
+}
+
+.signup-link a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}

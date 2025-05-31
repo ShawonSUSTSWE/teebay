@@ -1,0 +1,43 @@
+.container {
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: calc(70% + 3px);
+}
+
+.form {
+  width: 40%;
+  padding-top: 80px !important;
+}
+
+.input {
+  width: 70% !important;
+}
+
+.login-btn {
+  margin-top: 20px;
+}
+
+.signup-link {
+  font-size: 12px;
+}
+
+.signup-link a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}

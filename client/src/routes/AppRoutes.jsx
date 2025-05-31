@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import PublicRoute from "./PublicRoute";
 import ProtectedRoute from "./ProtectedRoute";
-import NotFound from "../pages/NotFound";
-import Login from "../pages/LogIn";
-import Signup from "../pages/Signup";
-import Home from "../pages/Home";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
+import Home from "@/pages/Home";
+import NotFound from "@/pages/NotFound";
 
 const AppRoutes = () => {
   console.log("AppRoutes component rendered");

@@ -11,5 +11,12 @@ export const userResolvers = {
     addUser: async (_, data, { userService }) => {
       return await userService.createUser(data);
     },
+    login: async (_, { email, password }, { userService }) => {
+      const user = await userService.validateUser(email, password);
+      if (!user || user.password !== password) {
+        throw new Error("Invalid email or password");
+      }
+      return await userService.generateToken(user);
+    },
   },
 };

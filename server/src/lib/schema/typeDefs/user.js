@@ -10,6 +10,10 @@ export const userTypeDefs = gql`
     phoneNumber: String!
   }
 
+  type token {
+    token: String!
+  }
+
   extend type Query {
     getUsers: [User]
     getUserById(id: ID!): User
@@ -24,5 +28,6 @@ export const userTypeDefs = gql`
       address: String!
       phoneNumber: String!
     ): User
+    login(email: String!, password: String!): token
   }
 `;

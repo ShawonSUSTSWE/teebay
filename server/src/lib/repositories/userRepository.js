@@ -31,6 +31,12 @@ class UserRepository {
       where: { id: id },
     });
   }
+
+  async getUserByEmail(email) {
+    return await this.prisma.user.findUnique({
+      where: { email: email },
+    });
+  }
 }
 
 export default UserRepository;

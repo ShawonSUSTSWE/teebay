@@ -1,3 +1,4 @@
+import { generateToken } from "../../config/jwt.js";
 import UserRepository from "../repositories/userRepository.js";
 
 class UserService {
@@ -30,6 +31,19 @@ class UserService {
       phoneNumber,
     };
     return await this.userRepository.createUser(data);
+  }
+
+  async validateUser(email, password) {
+    const user = await this.userRepository.getUserByEmail(email);
+    if (!user || user.password !== password) {
+      throw new Error("Invalid email or password");
+    }
+    return user;
+  }
+
+  async generateToken(user) {
+    const token = generateToken(user);
+    return { token };
   }
 }
 

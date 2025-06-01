@@ -11,7 +11,8 @@ export const userTypeDefs = gql`
   }
 
   type AuthResponse {
-    token: String!
+    success: Boolean!
+    message: String
   }
 
   extend type Query {
@@ -28,6 +29,7 @@ export const userTypeDefs = gql`
       address: String!
       phoneNumber: String!
     ): AuthResponse
-    login(email: String!, password: String!): AuthResponse
+    login(email: String!, password: String!): AuthResponse!
+    logout: AuthResponse!
   }
 `;

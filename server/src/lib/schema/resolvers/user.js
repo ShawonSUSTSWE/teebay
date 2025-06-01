@@ -19,5 +19,8 @@ export const userResolvers = {
       }
       return await userService.generateToken(user, res);
     },
+    logout: async (_, __, { userService, res }) => {
+      return await userService.logout(res);
+    },
   },
 };

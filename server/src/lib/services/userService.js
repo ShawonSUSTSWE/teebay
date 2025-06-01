@@ -1,4 +1,4 @@
-import { generateToken } from "../../config/jwt.js";
+import { clearCookie, generateToken } from "../../config/jwt.js";
 import { PRISMA_DUPLICATE_ERROR_CODE } from "../constants/ApplicationConstants.js";
 import UserRepository from "../repositories/userRepository.js";
 
@@ -35,8 +35,11 @@ class UserService {
   }
 
   async generateToken(user, res) {
-    const token = generateToken(user, res);
-    return { token };
+    return generateToken(user, res);
+  }
+
+  async logout(res) {
+    return clearCookie(res);
   }
 }
 

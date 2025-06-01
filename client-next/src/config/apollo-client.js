@@ -1,13 +1,38 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { logout } from "@/actions/authActions";
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 
-const createApolloClient = () => {
-  return new ApolloClient({
-    link: new HttpLink({
-      uri: "http://localhost:8000/graphql",
-      credentials: "include",
-    }),
-    cache: new InMemoryCache(),
-  });
-};
+const httpLink = createHttpLink({
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
+  credentials: "include",
+});
 
-export default createApolloClient;
+const errorLink = onError(({ graphQLErrors, networkError, client }) => {
+  if (graphQLErrors) {
+    for (let err of graphQLErrors) {
+      console.log(err);
+      if (
+        (err.extensions && err.extensions.code === "UNAUTHENTICATED") ||
+        err.message === "Unauthorized"
+      ) {
+        logout(client);
+
+        client.resetStore();
+        window.location.href = "/login";
+        return;
+      }
+    }
+  }
+
+  if (networkError) {
+    console.error(networkError);
+  }
+});
+
+const client = new ApolloClient({
+  link: errorLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
+export default client;

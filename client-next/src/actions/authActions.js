@@ -1,12 +1,11 @@
-import createApolloClient from "@/config/apollo-client";
+import client from "@/config/apollo-client";
 import { gql } from "@apollo/client";
-
-const client = createApolloClient();
 
 export const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-      token
+      success
+      message
     }
   }
 `;
@@ -28,12 +27,22 @@ export const SIGNUP_MUTATION = gql`
       address: $address
       phoneNumber: $phoneNumber
     ) {
-      token
+      success
+      message
     }
   }
 `;
 
-export async function login(email, password) {
+export const LOGOUT_MUTATION = gql`
+  mutation logout {
+    logout {
+      success
+      message
+    }
+  }
+`;
+
+export async function login({ email, password }) {
   try {
     const { data, errors } = await client.mutate({
       mutation: LOGIN_MUTATION,
@@ -45,11 +54,11 @@ export async function login(email, password) {
       throw new Error(errorMessage || "GraphQL login error");
     }
 
-    if (!data || !data.login || !data.login.token) {
+    if (!data || !data.login || !data.login.success) {
       throw new Error("Login failed: Invalid response from server.");
     }
 
-    return data.login.token;
+    return data.login.success;
   } catch (error) {
     console.error("Error during GraphQL login:", error);
     throw error;
@@ -70,13 +79,35 @@ export async function signup(data) {
       throw new Error(errorMessage || "GraphQL signup error");
     }
 
-    if (!result || !result.signup || !result.signup.token) {
+    if (!result || !result.signup || !result.signup.success) {
       throw new Error("Signup failed: Invalid response from server.");
     }
 
-    return result.signup.token;
+    return result.signup.success;
   } catch (error) {
     console.error("Error during GraphQL signup:", error);
+    throw error;
+  }
+}
+
+export async function logout() {
+  try {
+    const { data: result, errors } = await client.mutate({
+      mutation: LOGOUT_MUTATION,
+    });
+
+    if (errors) {
+      const errorMessage = errors.map((err) => err.message).join(", ");
+      throw new Error(errorMessage || "GraphQL logout error");
+    }
+
+    if (!result || !result.logout || !result.logout.success) {
+      throw new Error("Logout failed: Invalid response from server.");
+    }
+
+    return result.logout.success;
+  } catch (error) {
+    console.error("Error during GraphQL logout:", error);
     throw error;
   }
 }

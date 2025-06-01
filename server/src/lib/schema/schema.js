@@ -1,6 +1,8 @@
 import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
 import { userTypeDefs } from "./typeDefs/user.js";
 import { userResolvers } from "./resolvers/user.js";
+import { productTypeDefs } from "./typeDefs/product.js";
+import { productResolvers } from "./resolvers/product.js";
 
 const baseTypeDefs = `#graphql
   type Query {
@@ -12,9 +14,9 @@ const baseTypeDefs = `#graphql
   }
 `;
 
-const typeDefs = mergeTypeDefs([baseTypeDefs, userTypeDefs]);
+const typeDefs = mergeTypeDefs([baseTypeDefs, userTypeDefs, productTypeDefs]);
 
-const resolvers = mergeResolvers([userResolvers]);
+const resolvers = mergeResolvers([userResolvers, productResolvers]);
 
 export const schema = {
   typeDefs,

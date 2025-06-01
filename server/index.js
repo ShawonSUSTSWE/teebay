@@ -50,6 +50,7 @@ app.use(
         req,
         res,
         prisma,
+        user,
         ...services,
       };
     },

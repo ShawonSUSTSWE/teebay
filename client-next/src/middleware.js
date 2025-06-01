@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 
 const AUTH_ROUTES = ["/login", "/signup"];
 
-const PUBLIC_ROUTES = ["/", ...AUTH_ROUTES];
+const PUBLIC_ROUTES = [...AUTH_ROUTES];
 
-const redirectToPath = (path, baseUrl) => {
-  const url = basePath;
+const redirectToPath = (path, url) => {
   url.pathname = path;
   return NextResponse.redirect(url);
 };
@@ -32,5 +31,7 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
+  ],
 };

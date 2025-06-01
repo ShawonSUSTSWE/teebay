@@ -13,10 +13,17 @@ import { signupValidationRules } from "@/lib/utils/validationRules";
 import { signup } from "@/actions/authActions";
 import { showErrorToast } from "@/lib/utils/toastUtils";
 import { ToastContainer } from "react-toastify";
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const classNames = getClassNames(styles);
 
 export default function SignupSection() {
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -77,21 +84,37 @@ export default function SignupSection() {
         <InputField
           error={errors?.password?.message}
           placeholder="Password"
-          type="password"
+          type={isPasswordVisible ? "text" : "password"}
           className={classNames("input")}
           {...register("password", signupValidationRules.password)}
+          endActionButton={
+            <div onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+              {isPasswordVisible ? <Visibility /> : <VisibilityOff />}
+            </div>
+          }
         />
         <InputField
           error={errors?.confirmPassword?.message}
           placeholder="Confirm Password"
-          type="password"
+          type={isConfirmPasswordVisible ? "text" : "password"}
           className={classNames("input")}
           {...register(
             "confirmPassword",
             signupValidationRules.confirmPassword(getValues)
           )}
+          endActionButton={
+            <div
+              onClick={() =>
+                setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+              }
+            >
+              {isConfirmPasswordVisible ? <Visibility /> : <VisibilityOff />}
+            </div>
+          }
         />
-        <Button className={classNames("login-btn")}>REGISTER</Button>
+        <Button className={classNames("login-btn")} type="submit">
+          REGISTER
+        </Button>
         <p className={classNames("signup-link")}>
           Already have an account? <Link href="/login">Sign in</Link>
         </p>

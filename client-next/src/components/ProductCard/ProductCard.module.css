@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.view-and-delete-btn-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.delete-btn {
+  align-self: flex-end;
+}

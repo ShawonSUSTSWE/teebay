@@ -30,7 +30,7 @@ export const productTypeDefs = gql`
     rentalPrice: Int
     rentDuration: RentDuration
     status: ProductStatus!
-    owner: User!
+    owner: User
     categories: [Category!]!
     createdAt: String!
     updatedAt: String!

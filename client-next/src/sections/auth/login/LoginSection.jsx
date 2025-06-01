@@ -14,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { loginValidationRules } from "@/lib/utils/validationRules";
 import InputField from "@/components/InputField/InputField";
+import { useApolloClient } from "@apollo/client";
 
 const classNames = getClassNames(styles);
 
@@ -24,13 +25,14 @@ export default function LoginSection() {
     getValues,
     formState: { errors },
   } = useForm();
+  const client = useApolloClient();
 
   const router = useRouter();
 
   const hanleLogin = async () => {
     const data = getValues();
     try {
-      await login(data.email, data.password);
+      await login({ ...data });
     } catch (error) {
       showErrorToast(error.message || "Login failed");
       return;

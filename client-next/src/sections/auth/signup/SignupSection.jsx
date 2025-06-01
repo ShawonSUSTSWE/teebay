@@ -15,6 +15,7 @@ import { showErrorToast } from "@/lib/utils/toastUtils";
 import { ToastContainer } from "react-toastify";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useApolloClient } from "@apollo/client";
 
 const classNames = getClassNames(styles);
 
@@ -23,6 +24,7 @@ export default function SignupSection() {
     useState(false);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const client = useApolloClient();
 
   const {
     register,

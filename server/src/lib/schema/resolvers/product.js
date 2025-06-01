@@ -29,6 +29,7 @@ export const productResolvers = {
       return await productService.updateProduct(id, data, categoryNames);
     },
     deleteProduct: async (_, { id }, { productService, user }) => {
+      if (!user) throw new Error("Unauthorized");
       return await productService.deleteProduct(id, user);
     },
     updateProductStatus: async (_, { id, status }, { productService }) => {

@@ -8,9 +8,11 @@ import Button from "@/components/Button/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import InputField from "@/components/InputField/InputField";
 import { signupValidationRules } from "@/lib/utils/validationRules";
+import { signup } from "@/actions/authActions";
+import { showErrorToast } from "@/lib/utils/toastUtils";
+import { ToastContainer } from "react-toastify";
 
 const classNames = getClassNames(styles);
 
@@ -26,14 +28,13 @@ export default function SignupSection() {
 
   const handleSignup = async () => {
     const data = getValues();
-    console.log(data);
-    // try {
-    //   const token = await login(data.email, data.password);
-    //   console.log(token);
-    // } catch (error) {
-    //   showErrorToast(error.message || "Login failed");
-    //   return;
-    // }
+    try {
+      await signup(data);
+    } catch (error) {
+      showErrorToast(error.message || "Signup failed");
+      return;
+    }
+    router.push("/");
   };
 
   return (
@@ -95,6 +96,7 @@ export default function SignupSection() {
           Already have an account? <Link href="/login">Sign in</Link>
         </p>
       </FormContainer>
+      <ToastContainer />
     </div>
   );
 }

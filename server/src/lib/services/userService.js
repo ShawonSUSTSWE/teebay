@@ -1,4 +1,5 @@
 import { generateToken } from "../../config/jwt.js";
+import { PRISMA_DUPLICATE_ERROR_CODE } from "../constants/ApplicationConstants.js";
 import UserRepository from "../repositories/userRepository.js";
 
 class UserService {
@@ -14,23 +15,15 @@ class UserService {
     return await this.userRepository.getUserById(id);
   }
 
-  async createUser({
-    email,
-    password,
-    firstName,
-    lastName,
-    address,
-    phoneNumber,
-  }) {
-    const data = {
-      email,
-      password,
-      firstName,
-      lastName,
-      address,
-      phoneNumber,
-    };
-    return await this.userRepository.createUser(data);
+  async createUser(userData) {
+    try {
+      return await this.userRepository.createUser(userData);
+    } catch (error) {
+      if (error.code === PRISMA_DUPLICATE_ERROR_CODE) {
+        throw new Error("Email already exists");
+      }
+      throw error;
+    }
   }
 
   async validateUser(email, password) {

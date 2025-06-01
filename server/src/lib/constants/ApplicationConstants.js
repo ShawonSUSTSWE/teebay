@@ -1,0 +1,1 @@
+export const PRISMA_DUPLICATE_ERROR_CODE = "P2002";

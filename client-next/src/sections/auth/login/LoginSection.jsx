@@ -29,10 +29,8 @@ export default function LoginSection() {
 
   const hanleLogin = async () => {
     const data = getValues();
-    console.log(data);
     try {
-      const token = await login(data.email, data.password);
-      console.log(token);
+      await login(data.email, data.password);
     } catch (error) {
       showErrorToast(error.message || "Login failed");
       return;

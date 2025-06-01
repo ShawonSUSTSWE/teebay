@@ -20,14 +20,14 @@ export const userTypeDefs = gql`
   }
 
   extend type Mutation {
-    addUser(
+    signup(
       email: String!
       password: String!
       firstName: String!
       lastName: String!
       address: String!
       phoneNumber: String!
-    ): User
+    ): AuthResponse
     login(email: String!, password: String!): AuthResponse
   }
 `;

@@ -11,7 +11,6 @@ export default function InputField({
   className,
   ...inputProps
 }) {
-  console.log(error);
   return (
     <div className={classNames("input-field", className)}>
       <Input {...inputProps} error={error} />

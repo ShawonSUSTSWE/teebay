@@ -8,8 +8,9 @@ export const userResolvers = {
     },
   },
   Mutation: {
-    addUser: async (_, data, { userService }) => {
-      return await userService.createUser(data);
+    signup: async (_, data, { userService, res }) => {
+      const user = await userService.createUser(data);
+      return await userService.generateToken(user, res);
     },
     login: async (_, { email, password }, { userService, res }) => {
       const user = await userService.validateUser(email, password);

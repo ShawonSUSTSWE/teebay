@@ -6,7 +6,10 @@
   "scripts": {
     "generate": "prisma generate",
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "keywords": [],
   "author": "",

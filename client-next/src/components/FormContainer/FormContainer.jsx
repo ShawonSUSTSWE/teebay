@@ -3,6 +3,10 @@ import styles from "./FormContainer.module.css";
 
 const classNames = getClassNames(styles);
 
-export default function FormContainer({ children, className = "" }) {
-  return <form className={classNames("container", className)}>{children}</form>;
+export default function FormContainer({ children, className = "", onSubmit }) {
+  return (
+    <form className={classNames("container", className)} onSubmit={onSubmit}>
+      {children}
+    </form>
+  );
 }

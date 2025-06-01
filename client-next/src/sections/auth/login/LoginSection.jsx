@@ -11,39 +11,33 @@ import { useForm } from "react-hook-form";
 import { login } from "@/actions/authActions";
 import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
 import { ToastContainer } from "react-toastify";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const classNames = getClassNames(styles);
 
 export default function LoginSection() {
   const { register, getValues } = useForm();
-  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const hanleLogin = async (e) => {
     e.preventDefault();
     const data = getValues();
-    let success = false;
-    setLoading(true);
+    console.log(data);
     try {
       const token = await login(data.email, data.password);
-      success = true;
+      console.log(token);
     } catch (error) {
       showErrorToast(error.message || "Login failed");
-    } finally {
-      setLoading(false);
+      return;
     }
-    if (success) {
-      router.push("/");
-    }
+    router.push("/");
   };
 
   return (
     <div className={classNames("container")}>
       <SectionHeader header="SIGN IN" />
-      <FormContainer className={classNames("form")}>
+      <FormContainer className={classNames("form")} onSubmit={hanleLogin}>
         <Input
           placeholder="Email"
           className={classNames("input")}
@@ -63,13 +57,7 @@ export default function LoginSection() {
             required: true,
           })}
         />
-        <Button
-          className={classNames("login-btn")}
-          onClick={hanleLogin}
-          loading={loading}
-        >
-          LOGIN
-        </Button>
+        <Button className={classNames("login-btn")}>LOGIN</Button>
         <p className={classNames("signup-link")}>
           Don't have an account? <Link href="/signup">Signup</Link>
         </p>

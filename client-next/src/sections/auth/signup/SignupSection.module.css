@@ -10,7 +10,7 @@
 
 .row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   width: calc(70% + 3px);
 }

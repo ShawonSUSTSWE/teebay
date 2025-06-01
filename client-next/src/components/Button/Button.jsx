@@ -8,13 +8,16 @@ export default function Button({
   variant = "primary",
   className = "",
   children,
+  loading = false,
+  disabled = false,
+  ...props
 }) {
   return (
     <button
       className={classNames("button", variant, className)}
       onClick={onClick}
     >
-      {children}
+      {loading ? <div className={classNames("loading")}></div> : children}
     </button>
   );
 }

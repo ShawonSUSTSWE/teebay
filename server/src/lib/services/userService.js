@@ -41,8 +41,8 @@ class UserService {
     return user;
   }
 
-  async generateToken(user) {
-    const token = generateToken(user);
+  async generateToken(user, res) {
+    const token = generateToken(user, res);
     return { token };
   }
 }

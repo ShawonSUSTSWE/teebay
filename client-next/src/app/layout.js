@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
 import "./globals.css";
+import ApolloProviderWrapper from "@/providers/ApolloProvider";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -16,7 +17,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${openSans.variable}`}>{children}</body>
+      <body className={`${openSans.variable}`}>
+        <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
+      </body>
     </html>
   );
 }

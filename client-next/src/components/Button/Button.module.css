@@ -20,3 +20,23 @@
 .button:hover {
   cursor: pointer;
 }
+
+.loading {
+  border-top: 2px solid white;
+  border-bottom: 2px solid white;
+  border-right: 2px solid white;
+  border-left: 2px solid transparent;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  animation: spin 600ms linear infinite;
+}
+
+@keyframes spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}

@@ -10,7 +10,7 @@ export const userTypeDefs = gql`
     phoneNumber: String!
   }
 
-  type token {
+  type AuthResponse {
     token: String!
   }
 
@@ -28,6 +28,6 @@ export const userTypeDefs = gql`
       address: String!
       phoneNumber: String!
     ): User
-    login(email: String!, password: String!): token
+    login(email: String!, password: String!): AuthResponse
   }
 `;

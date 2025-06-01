@@ -1,0 +1,10 @@
+.input-field {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}
+
+.error {
+  color: red;
+}

@@ -24,8 +24,7 @@ export default function SignupSection() {
 
   const router = useRouter();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const handleSignup = async () => {
     const data = getValues();
     console.log(data);
     // try {

@@ -37,3 +37,16 @@ export const signupValidationRules = {
       value === getValues("password") || "Passwords do not match",
   }),
 };
+
+export const loginValidationRules = {
+  email: {
+    required: "Email is required",
+    pattern: {
+      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      message: "Enter a valid email address",
+    },
+  },
+  password: {
+    required: "Password is required",
+  },
+};

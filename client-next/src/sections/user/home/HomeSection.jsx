@@ -75,6 +75,10 @@ export default function HomeSection() {
 
   useOnClickOutside(deleteModalRef, hideDeleteModal);
 
+  if (error) {
+    return null;
+  }
+
   return (
     <div className={classNames("container")}>
       <Button

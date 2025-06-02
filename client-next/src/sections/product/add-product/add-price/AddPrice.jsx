@@ -8,48 +8,94 @@ import { useEffect, useState } from "react";
 import styles from "./AddPrice.module.css";
 import Input from "@/components/Input/Input";
 import InputField from "@/components/InputField/InputField";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import RentDuration from "@/lib/constants/RentDuration";
 
 const classNames = getClassNames(styles);
+
+const isNumeric = (value) => /^\d*\.?\d*$/.test(value);
 
 export default function AddPrice({}) {
   const router = useRouter();
   const { formData, updateForm } = useProductForm();
   const [price, setPrice] = useState(formData.price || "");
-  const [rentPrice, setRentPrice] = useState(formData.rentPrice || "");
+  const [rentalPrice, setRentalPrice] = useState(formData.rentalPrice || "");
   const [rentDuration, setRentDuration] = useState(formData.rentDuration || "");
+  const [priceError, setPriceError] = useState("");
+  const [rentalPriceError, setRentalPriceError] = useState("");
 
   useEffect(() => {
-    console.log({ formData });
     setPrice(formData.price);
+    setRentalPrice(formData.rentalPrice);
+    setRentDuration(formData.rentDuration);
   }, [formData]);
 
   const handleBack = () => {
-    updateForm({ price, rentPrice, rentDuration });
+    updateForm({ price, rentalPrice, rentDuration });
     router.back();
   };
 
   const handleNext = () => {
-    updateForm({ price, rentPrice, rentDuration });
-    router.push("/add-product/description");
+    updateForm({ price, rentalPrice, rentDuration });
+    router.push("/add-product/categories");
   };
 
-  const isNextDisabled = !price && (!rentPrice || !rentDuration);
+  const handlePriceChange = (e) => {
+    const value = e.target.value;
+    if (isNumeric(value)) {
+      setPrice(value);
+      setPriceError("");
+    } else {
+      setPrice(value);
+      setPriceError("Only numeric values are allowed");
+    }
+  };
+
+  const handleRentalPriceChange = (e) => {
+    const value = e.target.value;
+    if (isNumeric(value)) {
+      setRentalPrice(value);
+      setRentalPriceError("");
+    } else {
+      setRentalPrice(value);
+      setRentalPriceError("Only numeric values are allowed");
+    }
+  };
+
+  const hasPrice = !isEmptyString(price);
+  const hasRentalPrice = !isEmptyString(rentalPrice);
+  const hasRentDuration = !isEmptyString(rentDuration);
+
+  const isNextDisabled =
+    !(
+      (hasPrice && !hasRentalPrice && !hasRentDuration) ||
+      (hasRentalPrice && hasRentDuration)
+    ) ||
+    priceError ||
+    rentalPriceError;
 
   return (
     <div className={classNames("container")}>
       <p>Select a price for your product</p>
-      <Input
-        type="text"
+      <InputField
         value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        onChange={handlePriceChange}
+        error={!!priceError}
       />
+      {priceError && <FormHelperText error>{priceError}</FormHelperText>}
       <div className={classNames("row")}>
         <InputField
           label={"Rent Price"}
-          value={rentPrice}
-          onChange={(e) => setRentPrice(e.target.value)}
+          value={rentalPrice}
+          onChange={handleRentalPriceChange}
+          error={!!rentalPriceError}
+          showError={false}
         />
         <FormControl fullWidth>
           <InputLabel id="rent-duration-label">Duration</InputLabel>
@@ -65,6 +111,9 @@ export default function AddPrice({}) {
           </Select>
         </FormControl>
       </div>
+      {rentalPriceError && (
+        <FormHelperText error>{rentalPriceError}</FormHelperText>
+      )}
       <div className={classNames("button-container")}>
         <Button onClick={handleBack}>Back</Button>
         <Button onClick={handleNext} disabled={isNextDisabled}>

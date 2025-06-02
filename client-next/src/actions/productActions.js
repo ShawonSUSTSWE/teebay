@@ -27,15 +27,21 @@ export const DELETE_PRODUCT = gql`
   }
 `;
 
-export async function fetchOwnedProducts(client) {
-  try {
-    const { data } = await client.query({
-      query: GET_OWNED_PRODUCTS_QUERY,
-      fetchPolicy: "cache-first",
-    });
-    return data.getProductsByOwner;
-  } catch (error) {
-    console.error("Error fetching owned products:", error);
-    throw new Error("Failed to fetch owned products");
+export const CREATE_PRODUCT = gql`
+  mutation CreateProduct($data: ProductInput!, $categoryNames: [String!]!) {
+    createProduct(data: $data, categoryNames: $categoryNames) {
+      id
+      name
+      description
+      status
+      price
+      rentalPrice
+      rentDuration
+      categories {
+        id
+        name
+      }
+      createdAt
+    }
   }
-}
+`;

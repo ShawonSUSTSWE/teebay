@@ -8,7 +8,7 @@ const httpLink = createHttpLink({
   credentials: "include",
 });
 
-const errorLink = onError(({ graphQLErrors, networkError, client }) => {
+const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     for (let err of graphQLErrors) {
       console.log(err);
@@ -16,9 +16,7 @@ const errorLink = onError(({ graphQLErrors, networkError, client }) => {
         (err.extensions && err.extensions.code === "UNAUTHENTICATED") ||
         err.message === "Unauthorized"
       ) {
-        logout(client);
-
-        client.resetStore();
+        logout();
         window.location.href = "/login";
         return;
       }

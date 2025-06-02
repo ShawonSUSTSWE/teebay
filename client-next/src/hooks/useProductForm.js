@@ -7,7 +7,7 @@ const defaultFormData = {
   categories: [],
   description: "",
   price: "",
-  rentPrice: "",
+  rentalPrice: "",
   rentDuration: "",
 };
 

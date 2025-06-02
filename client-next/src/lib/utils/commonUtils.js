@@ -29,3 +29,13 @@ export const formatDateToLocaleString = (date) => {
 
   return `${day}${getOrdinal(day)} ${month} ${year}`;
 };
+
+export const isNull = (obj) => {
+  return (
+    obj === null || obj === undefined || obj === "null" || obj === "undefined"
+  );
+};
+
+export const isEmptyString = (str) => {
+  return isNull(str) || str.length === 0;
+};

@@ -69,6 +69,10 @@ export default function HomeSection() {
     setIsDeleteModalShown(false);
   };
 
+  const routeToAddProduct = () => {
+    router.push("/add-product");
+  };
+
   useOnClickOutside(deleteModalRef, hideDeleteModal);
 
   return (
@@ -90,7 +94,12 @@ export default function HomeSection() {
             deleteProduct={showDeleteModal}
           />
         )}
-        <Button className={classNames("add-product-btn")}>Add Product</Button>
+        <Button
+          className={classNames("add-product-btn")}
+          onClick={routeToAddProduct}
+        >
+          Add Product
+        </Button>
       </div>
       {isDeleteModalShown ? (
         <ConfirmationModal

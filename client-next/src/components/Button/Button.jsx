@@ -10,12 +10,17 @@ export default function Button({
   children,
   loading = false,
   disabled = false,
-  ...props
 }) {
   return (
     <button
-      className={classNames("button", variant, className)}
+      className={classNames(
+        "button",
+        variant,
+        className,
+        disabled && "disabled"
+      )}
       onClick={onClick}
+      disabled={disabled}
     >
       {loading ? <div className={classNames("loading")}></div> : children}
     </button>

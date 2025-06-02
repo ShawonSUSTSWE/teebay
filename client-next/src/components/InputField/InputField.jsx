@@ -13,6 +13,7 @@ export default function InputField({
 }) {
   return (
     <div className={classNames("input-field", className)}>
+      {label && <label>{label}</label>}
       <Input {...inputProps} error={error} />
       {error && showError && <div className={classNames("error")}>{error}</div>}
     </div>

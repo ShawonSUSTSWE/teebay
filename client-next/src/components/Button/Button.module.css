@@ -32,6 +32,10 @@
   animation: spin 600ms linear infinite;
 }
 
+.disabled {
+  opacity: 0.3;
+}
+
 @keyframes spin {
   from {
     rotate: 0deg;

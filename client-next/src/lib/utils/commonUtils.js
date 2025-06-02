@@ -39,3 +39,16 @@ export const isNull = (obj) => {
 export const isEmptyString = (str) => {
   return isNull(str) || str.length === 0;
 };
+
+export const isEmptyArray = (arr) => {
+  return !arr || arr.length === 0;
+};
+
+export const punctualizeString = (string = "", separator = "_") => {
+  const words = string.split(separator);
+  const capitalizedWords = words.map(
+    (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  );
+  const capitalizedString = capitalizedWords.join(" ");
+  return capitalizedString;
+};

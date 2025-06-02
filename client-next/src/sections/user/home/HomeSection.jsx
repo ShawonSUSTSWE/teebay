@@ -96,6 +96,7 @@ export default function HomeSection() {
           <ProductList
             products={data?.getProductsByOwner || []}
             deleteProduct={showDeleteModal}
+            isOwned={true}
           />
         )}
         <Button

@@ -6,12 +6,6 @@
   border: 1px solid var(--border-color);
 }
 
-.product-details {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .view-and-delete-btn-container {
   display: flex;
   flex-direction: column;
@@ -27,6 +21,6 @@
   color: var(--danger-color);
 }
 
-.categories {
-  text-transform: capitalize;
+.view-count {
+  color: var(--border-color);
 }

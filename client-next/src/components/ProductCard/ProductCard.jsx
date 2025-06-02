@@ -4,46 +4,35 @@ import {
 } from "@/lib/utils/commonUtils";
 import styles from "./ProductCard.module.css";
 import { Delete } from "@mui/icons-material";
+import Link from "next/link";
+import { PageRoutes } from "@/lib/utils/routeUtils";
+import ProductDetails from "../ProductDetails/ProductDetails";
 
 const classNames = getClassNames(styles);
 
-export default function ProductCard({ product, deleteProduct = () => {} }) {
+export default function ProductCard({
+  product,
+  deleteProduct = () => {},
+  isOwned = false,
+}) {
   return (
-    <div className={classNames("container")}>
-      <div className={classNames("product-details")}>
-        <h3>{product.name}</h3>
-        <p className={classNames("categories")}>
-          <strong>Categories:</strong>{" "}
-          {product.categories?.map((cat) => cat.name.toLowerCase()).join(", ")}
-        </p>
-        <p>
-          {product.price && (
-            <>
-              <strong>Price:</strong> ${product.price}
-            </>
+    <Link href={PageRoutes.productDetailsPage(product.id)}>
+      <div className={classNames("container")}>
+        <ProductDetails {...product} />
+        <div className={classNames("view-and-delete-btn-container")}>
+          {isOwned ? (
+            <div
+              className={classNames("delete-btn")}
+              onClick={() => deleteProduct(product.id)}
+            >
+              <Delete />
+            </div>
+          ) : (
+            <div></div>
           )}
-          {product.price && product.rentalPrice && " | "}
-          {product.rentalPrice && (
-            <>
-              <strong>Rent:</strong> ${product.rentalPrice}{" "}
-              {product.rentDuration?.toLowerCase()}
-            </>
-          )}
-        </p>
-        <p>{product.description}</p>
-        <p>
-          Date posted: {formatDateToLocaleString(new Date(product.createdAt))}
-        </p>
-      </div>
-      <div className={classNames("view-and-delete-btn-container")}>
-        <div
-          className={classNames("delete-btn")}
-          onClick={() => deleteProduct(product.id)}
-        >
-          <Delete />
+          <p className={classNames("view-count")}>10 views</p>
         </div>
-        <p>10 views</p>
       </div>
-    </div>
+    </Link>
   );
 }

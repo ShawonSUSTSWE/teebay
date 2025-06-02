@@ -45,3 +45,25 @@ export const CREATE_PRODUCT = gql`
     }
   }
 `;
+
+export const GET_PRODUCT_DETAILS = gql`
+  query GetProductById($id: ID!) {
+    getProductById(id: $id) {
+      id
+      name
+      description
+      status
+      price
+      rentalPrice
+      rentDuration
+      categories {
+        id
+        name
+      }
+      owner {
+        id
+        email
+      }
+    }
+  }
+`;

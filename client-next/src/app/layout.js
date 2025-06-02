@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
 import "./globals.css";
 import ApolloProviderWrapper from "@/providers/ApolloProvider";
+import { ToastContainer } from "react-toastify";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -18,7 +19,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${openSans.variable}`}>
-        <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
+        <ApolloProviderWrapper>
+          {children}
+          <ToastContainer />
+        </ApolloProviderWrapper>
       </body>
     </html>
   );

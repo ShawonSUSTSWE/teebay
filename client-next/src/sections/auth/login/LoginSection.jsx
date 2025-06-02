@@ -10,7 +10,6 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { login } from "@/actions/authActions";
 import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
-import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { loginValidationRules } from "@/lib/utils/validationRules";
 import InputField from "@/components/InputField/InputField";
@@ -65,7 +64,6 @@ export default function LoginSection() {
           Don't have an account? <Link href="/signup">Signup</Link>
         </p>
       </FormContainer>
-      <ToastContainer />
     </div>
   );
 }

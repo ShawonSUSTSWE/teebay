@@ -13,7 +13,7 @@
 }
 
 .secondary {
-  background-color: #d9534f;
+  background-color: var(--danger-color);
   color: var(--primary-color);
 }
 

@@ -4,11 +4,11 @@ import ProductCard from "../ProductCard/ProductCard";
 
 const classNames = getClassNames(styles);
 
-export default function ProductList({ products = [] }) {
+export default function ProductList({ products = [], ...props }) {
   return (
     <div className={classNames("container")}>
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} product={product} {...props} />
       ))}
     </div>
   );

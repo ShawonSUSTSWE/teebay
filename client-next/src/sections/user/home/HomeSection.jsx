@@ -7,27 +7,69 @@ import { logout } from "@/actions/authActions";
 import { useRouter } from "next/navigation";
 import SectionHeader from "@/components/SectionHeader/SectionHeader";
 import ProductList from "@/components/ProductList/ProductList";
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
-  fetchOwnedProducts,
+  DELETE_PRODUCT,
   GET_OWNED_PRODUCTS_QUERY,
 } from "@/actions/productActions";
-import { useEffect } from "react";
+import Loader from "@/components/Loader/Loader";
+import { showErrorToast } from "@/lib/utils/toastUtils";
+import { useRef, useState } from "react";
+import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
+import useOnClickOutside from "@/hooks/useOnClickOutside";
 
 const classNames = getClassNames(styles);
 
 export default function HomeSection() {
+  const [isDeleteModalShown, setIsDeleteModalShown] = useState(false);
+  const [productToBeDeleted, setProductToBeDeleted] = useState("");
+  const deleteModalRef = useRef(null);
+
   const router = useRouter();
-  const client = useApolloClient();
-  const { data, loading, error } = useQuery(GET_OWNED_PRODUCTS_QUERY, {
-    client,
-    fetchPolicy: "cache-first",
+  const { data, loading, error } = useQuery(GET_OWNED_PRODUCTS_QUERY);
+
+  const [deleteProductMutation] = useMutation(DELETE_PRODUCT, {
+    update(cache, { data }) {
+      const { getProductsByOwner } = cache.readQuery({
+        query: GET_OWNED_PRODUCTS_QUERY,
+      });
+
+      cache.writeQuery({
+        query: GET_OWNED_PRODUCTS_QUERY,
+        data: {
+          getProductsByOwner: getProductsByOwner.filter(
+            (product) => product.id !== data.deleteProduct.id
+          ),
+        },
+      });
+    },
   });
 
   const handleLogout = async () => {
     await logout();
     router.push("/login");
   };
+
+  const deleteProduct = async () => {
+    try {
+      await deleteProductMutation({ variables: { id: productToBeDeleted } });
+    } catch (error) {
+      showErrorToast(error.message);
+    }
+    hideDeleteModal();
+  };
+
+  const showDeleteModal = (productId) => {
+    setProductToBeDeleted(productId);
+    setIsDeleteModalShown(true);
+  };
+
+  const hideDeleteModal = () => {
+    setProductToBeDeleted("");
+    setIsDeleteModalShown(false);
+  };
+
+  useOnClickOutside(deleteModalRef, hideDeleteModal);
 
   return (
     <div className={classNames("container")}>
@@ -40,8 +82,24 @@ export default function HomeSection() {
       </Button>
       <div className={classNames("my-product-section")}>
         <SectionHeader header="MY PRODUCTS" />
-        <ProductList products={[]} />
+        {loading ? (
+          <Loader />
+        ) : (
+          <ProductList
+            products={data?.getProductsByOwner || []}
+            deleteProduct={showDeleteModal}
+          />
+        )}
+        <Button className={classNames("add-product-btn")}>Add Product</Button>
       </div>
+      {isDeleteModalShown ? (
+        <ConfirmationModal
+          confirmMessage={"Are you sure you want to delete this product?"}
+          confirm={deleteProduct}
+          cancel={hideDeleteModal}
+          ref={deleteModalRef}
+        />
+      ) : null}
     </div>
   );
 }

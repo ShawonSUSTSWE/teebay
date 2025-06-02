@@ -1,8 +1,15 @@
 .container {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 20px;
   border: 1px solid var(--border-color);
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .view-and-delete-btn-container {
@@ -13,4 +20,13 @@
 
 .delete-btn {
   align-self: flex-end;
+}
+
+.delete-btn:hover {
+  cursor: pointer;
+  color: var(--danger-color);
+}
+
+.categories {
+  text-transform: capitalize;
 }

@@ -14,6 +14,15 @@ export const GET_OWNED_PRODUCTS_QUERY = gql`
         id
         name
       }
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_PRODUCT = gql`
+  mutation deleteProduct($id: ID!) {
+    deleteProduct(id: $id) {
+      id
     }
   }
 `;

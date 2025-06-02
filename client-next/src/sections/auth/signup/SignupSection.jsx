@@ -12,7 +12,6 @@ import InputField from "@/components/InputField/InputField";
 import { signupValidationRules } from "@/lib/utils/validationRules";
 import { signup } from "@/actions/authActions";
 import { showErrorToast } from "@/lib/utils/toastUtils";
-import { ToastContainer } from "react-toastify";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useApolloClient } from "@apollo/client";
@@ -121,7 +120,6 @@ export default function SignupSection() {
           Already have an account? <Link href="/login">Sign in</Link>
         </p>
       </FormContainer>
-      <ToastContainer />
     </div>
   );
 }

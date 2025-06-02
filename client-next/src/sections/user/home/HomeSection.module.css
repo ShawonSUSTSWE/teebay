@@ -10,13 +10,22 @@
 }
 
 .button {
+  /* position: fixed;
+  top: 20px;
+  right: 20px; */
   align-self: flex-end;
   width: 80px;
 }
 
 .my-product-section {
+  width: 60%;
   padding-top: 50px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 30px;
+}
+
+.add-product-btn {
+  align-self: flex-end;
 }

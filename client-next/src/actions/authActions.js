@@ -65,12 +65,12 @@ export async function login({ email, password }) {
   }
 }
 
-export async function signup(data) {
+export async function signup(userData) {
   try {
-    const { data: result, errors } = await client.mutate({
+    const { data, errors } = await client.mutate({
       mutation: SIGNUP_MUTATION,
       variables: {
-        ...data,
+        ...userData,
       },
     });
 
@@ -79,11 +79,11 @@ export async function signup(data) {
       throw new Error(errorMessage || "GraphQL signup error");
     }
 
-    if (!result || !result.signup || !result.signup.success) {
+    if (!data || !data.signup || !data.signup.success) {
       throw new Error("Signup failed: Invalid response from server.");
     }
 
-    return result.signup.success;
+    return data.signup.success;
   } catch (error) {
     console.error("Error during GraphQL signup:", error);
     throw error;
@@ -92,7 +92,7 @@ export async function signup(data) {
 
 export async function logout() {
   try {
-    const { data: result, errors } = await client.mutate({
+    const { data, errors } = await client.mutate({
       mutation: LOGOUT_MUTATION,
     });
 
@@ -101,11 +101,11 @@ export async function logout() {
       throw new Error(errorMessage || "GraphQL logout error");
     }
 
-    if (!result || !result.logout || !result.logout.success) {
+    if (!data || !data.logout || !data.logout.success) {
       throw new Error("Logout failed: Invalid response from server.");
     }
 
-    return result.logout.success;
+    return data.logout.success;
   } catch (error) {
     console.error("Error during GraphQL logout:", error);
     throw error;

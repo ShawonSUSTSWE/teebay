@@ -1,6 +1,8 @@
 import gql from "graphql-tag";
 
 export const productTypeDefs = gql`
+  scalar Date
+
   enum ProductStatus {
     AVAILABLE
     SOLD
@@ -32,8 +34,8 @@ export const productTypeDefs = gql`
     status: ProductStatus!
     owner: User
     categories: [Category!]!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: Date!
+    updatedAt: Date!
   }
 
   type ProductResponse {

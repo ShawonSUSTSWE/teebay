@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: teebay_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass1234
+      POSTGRES_DB: teebay
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: ./server
+    container_name: teebay_server
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./server/.env
+    depends_on:
+      - postgres
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    command: node index.js
+
+  client:
+    build:
+      context: ./client-next
+    container_name: teebay_client
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    volumes:
+      - ./client-next:/app
+      - /app/node_modules
+    command: npm run dev
+
+volumes:
+  postgres_data:

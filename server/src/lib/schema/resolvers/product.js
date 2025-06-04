@@ -44,9 +44,10 @@ export const productResolvers = {
     updateProduct: async (
       _,
       { id, data, categoryNames },
-      { productService }
+      { productService, user }
     ) => {
-      return await productService.updateProduct(id, data, categoryNames);
+      if (!user) throw new Error("Unauthorized");
+      return await productService.updateProduct(id, data, categoryNames, user);
     },
     deleteProduct: async (_, { id }, { productService, user }) => {
       if (!user) throw new Error("Unauthorized");

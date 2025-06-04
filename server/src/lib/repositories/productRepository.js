@@ -62,7 +62,7 @@ class ProductRepository {
     return this.prisma.product.findMany({
       where: {
         status: {
-          in: ["AVAILABLE", "RENTED"],
+          in: ["AVAILABLE"],
         },
       },
       include: {

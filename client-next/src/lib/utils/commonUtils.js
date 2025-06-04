@@ -52,3 +52,7 @@ export const punctualizeString = (string = "", separator = "_") => {
   const capitalizedString = capitalizedWords.join(" ");
   return capitalizedString;
 };
+
+export const extractFieldFromObjectArray = (data, fieldName) => {
+  return data.map((item) => item[fieldName]);
+};

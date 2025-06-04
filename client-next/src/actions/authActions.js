@@ -42,6 +42,15 @@ export const LOGOUT_MUTATION = gql`
   }
 `;
 
+export const SESSION_MUTATION = gql`
+  query {
+    session {
+      id
+      email
+    }
+  }
+`;
+
 export async function login({ email, password }) {
   try {
     const { data, errors } = await client.mutate({
@@ -104,6 +113,8 @@ export async function logout() {
     if (!data || !data.logout || !data.logout.success) {
       throw new Error("Logout failed: Invalid response from server.");
     }
+
+    await client.clearStore();
 
     return data.logout.success;
   } catch (error) {

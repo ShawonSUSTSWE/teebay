@@ -23,7 +23,11 @@ export default function ProductCard({
           {isOwned ? (
             <div
               className={classNames("delete-btn")}
-              onClick={() => deleteProduct(product.id)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                deleteProduct(product.id);
+              }}
             >
               <Delete />
             </div>

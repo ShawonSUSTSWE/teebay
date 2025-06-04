@@ -6,6 +6,9 @@ export const userResolvers = {
     getUserById: async (_, { id }, { userService }) => {
       return await userService.getUserById(id);
     },
+    session: async (_, __, { user }) => {
+      return user;
+    },
   },
   Mutation: {
     signup: async (_, data, { userService, res }) => {

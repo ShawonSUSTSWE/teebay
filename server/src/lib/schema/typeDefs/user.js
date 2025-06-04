@@ -15,9 +15,15 @@ export const userTypeDefs = gql`
     message: String
   }
 
+  type SessionResponse {
+    id: String
+    email: String
+  }
+
   extend type Query {
     getUsers: [User]
     getUserById(id: ID!): User
+    session: SessionResponse!
   }
 
   extend type Mutation {

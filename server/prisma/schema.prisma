@@ -8,16 +8,18 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(cuid())
-  email       String    @unique
+  id          String        @id @default(cuid())
+  email       String        @unique
   password    String
   firstName   String
   lastName    String
   address     String
   phoneNumber String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  products    Product[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  products    Product[]     @relation("OwnedProducts")
+  sold        Transaction[] @relation("SellerTransactions")
+  bought      Transaction[] @relation("BuyerTransactions")
 }
 
 model Product {
@@ -29,8 +31,9 @@ model Product {
   rentDuration RentDuration?
   status       ProductStatus @default(AVAILABLE)
   ownerId      String
-  owner        User          @relation(fields: [ownerId], references: [id])
+  owner        User          @relation("OwnedProducts", fields: [ownerId], references: [id])
   categories   Category[]
+  transactions Transaction[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -43,11 +46,28 @@ model Category {
   updatedAt DateTime  @updatedAt
 }
 
+model Transaction {
+  id           String          @id @default(cuid())
+  productId    String
+  product      Product         @relation(fields: [productId], references: [id])
+  buyerId      String
+  buyer        User            @relation("BuyerTransactions", fields: [buyerId], references: [id])
+  sellerId     String
+  seller       User            @relation("SellerTransactions", fields: [sellerId], references: [id])
+  type         TransactionType
+  startDate    DateTime?
+  endDate      DateTime?
+  amount       Int
+  rentDuration RentDuration?
+  createdAt    DateTime        @default(now())
+}
+
 enum ProductStatus {
   AVAILABLE
   SOLD
   PENDING
   DRAFT
+  RENTED
 }
 
 enum RentDuration {
@@ -55,4 +75,9 @@ enum RentDuration {
   DAILY
   WEEKLY
   MONTHLY
+}
+
+enum TransactionType {
+  BUY
+  RENT
 }

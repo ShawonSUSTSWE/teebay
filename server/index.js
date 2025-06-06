@@ -9,7 +9,7 @@ import { clearCookie, verifyToken } from "./src/config/jwt.js";
 import logGraphQLRequests from "./src/config/logger.js";
 import { schema } from "./src/graphql/schema/schema.js";
 import { createServices } from "./src/services/index.js";
-import PublicOperations from "./src/lib/constants/PublicOperations.js";
+import authPlugin from "./src/config/authPlugin.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
@@ -28,6 +28,7 @@ app.use(logGraphQLRequests);
 
 const server = new ApolloServer({
   ...schema,
+  plugins: [authPlugin],
 });
 
 await server.start();
@@ -49,10 +50,6 @@ app.use(
         }
       }
 
-      if (!PublicOperations.includes(req.body?.operationName) && !user) {
-        clearCookie(res);
-        throw new Error("Unauthorized!!");
-      }
       return {
         req,
         res,

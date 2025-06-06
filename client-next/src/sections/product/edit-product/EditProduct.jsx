@@ -25,6 +25,7 @@ import {
 import RentDuration from "@/lib/constants/RentDuration";
 import Button from "@/components/Button/Button";
 import { showErrorToast } from "@/lib/utils/toastUtils";
+import CustomSelect from "@/components/CustomSelect/CustomSelect";
 
 const classNames = getClassNames(styles);
 
@@ -172,19 +173,13 @@ export default function EditProduct({ id }) {
           error={!!rentalPriceError}
           showError={false}
         />
-        <FormControl fullWidth>
-          <InputLabel id="rent-duration-label">Duration</InputLabel>
-          <Select
-            labelId="rent-duration-label"
-            value={rentDuration}
-            onChange={(e) => setRentDuration(e.target.value)}
-            size="small"
-          >
-            {Object.entries(RentDuration).map(([key, value]) => (
-              <MenuItem value={key}>{value}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <CustomSelect
+          label={"Duration"}
+          labelId={"rent-duration-label"}
+          value={rentDuration}
+          setValue={setRentDuration}
+          options={RentDuration}
+        />
         {rentalPriceError && (
           <FormHelperText error>{rentalPriceError}</FormHelperText>
         )}

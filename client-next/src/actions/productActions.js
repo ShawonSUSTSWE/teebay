@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_OWNED_PRODUCTS_QUERY = gql`
-  query GetProductsByOwner {
+  query getProductsByOwner {
     getProductsByOwner {
       id
       name
@@ -28,7 +28,7 @@ export const DELETE_PRODUCT = gql`
 `;
 
 export const CREATE_PRODUCT = gql`
-  mutation CreateProduct($data: ProductInput!, $categoryNames: [String!]!) {
+  mutation createProduct($data: ProductInput!, $categoryNames: [String!]!) {
     createProduct(data: $data, categoryNames: $categoryNames) {
       id
       name
@@ -47,7 +47,7 @@ export const CREATE_PRODUCT = gql`
 `;
 
 export const GET_PRODUCT_DETAILS = gql`
-  query GetProductById($id: ID!) {
+  query getProductById($id: ID!) {
     getProductById(id: $id) {
       id
       name
@@ -69,7 +69,7 @@ export const GET_PRODUCT_DETAILS = gql`
 `;
 
 export const UPDATE_PRODUCT = gql`
-  mutation UpdateProduct(
+  mutation updateProduct(
     $id: ID!
     $data: ProductInput!
     $categoryNames: [String!]!
@@ -91,7 +91,7 @@ export const UPDATE_PRODUCT = gql`
 `;
 
 export const GET_AVAILABLE_PRODUCTS = gql`
-  query GetAvailableProducts {
+  query getAvailableProducts {
     getAllAvailableProducts {
       id
       name

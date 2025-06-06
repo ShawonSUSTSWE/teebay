@@ -2,7 +2,7 @@ import client from "@/config/apollo-client";
 import { gql } from "@apollo/client";
 
 export const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
+  mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       success
       message
@@ -42,8 +42,8 @@ export const LOGOUT_MUTATION = gql`
   }
 `;
 
-export const SESSION_MUTATION = gql`
-  query {
+export const SESSION_QUERY = gql`
+  query session {
     session {
       id
       email

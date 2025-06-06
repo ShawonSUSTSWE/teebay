@@ -2,26 +2,21 @@
 
 import Button from "@/components/Button/Button";
 import { useProductForm } from "@/hooks/useProductForm";
-import { getClassNames, isEmptyString } from "@/lib/utils/commonUtils";
+import {
+  getClassNames,
+  isEmptyString,
+  isNumeric,
+} from "@/lib/utils/commonUtils";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./AddPrice.module.css";
-import Input from "@/components/Input/Input";
 import InputField from "@/components/InputField/InputField";
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { FormHelperText } from "@mui/material";
 import RentDuration from "@/lib/constants/RentDuration";
 import CustomSelect from "@/components/CustomSelect/CustomSelect";
 import { routeToNextProductCreatePage } from "@/lib/utils/routeUtils";
 
 const classNames = getClassNames(styles);
-
-const isNumeric = (value) => /^\d*\.?\d*$/.test(value);
 
 export default function AddPrice({}) {
   const router = useRouter();

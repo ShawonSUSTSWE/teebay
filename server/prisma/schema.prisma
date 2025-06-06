@@ -23,27 +23,19 @@ model User {
 }
 
 model Product {
-  id           String        @id @default(cuid())
+  id           String         @id @default(cuid())
   name         String
   description  String?
   price        Int?
   rentalPrice  Int?
   rentDuration RentDuration?
-  status       ProductStatus @default(AVAILABLE)
+  status       ProductStatus  @default(AVAILABLE)
   ownerId      String
-  owner        User          @relation("OwnedProducts", fields: [ownerId], references: [id])
-  categories   Category[]
+  owner        User           @relation("OwnedProducts", fields: [ownerId], references: [id])
+  categories   CategoryType[]
   transactions Transaction[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-}
-
-model Category {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 }
 
 model Transaction {
@@ -80,4 +72,13 @@ enum RentDuration {
 enum TransactionType {
   BUY
   RENT
+}
+
+enum CategoryType {
+  ELECTRONICS
+  FURNITURE
+  HOME_APPLIANCES
+  SPORTING_GOODS
+  OUTDOOR
+  TOYS
 }

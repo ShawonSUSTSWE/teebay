@@ -4,21 +4,14 @@ class ProductRepository {
   }
 
   async createProduct(data, categoryNames, ownerId) {
-    const categoryConnects = categoryNames.map((name) => ({
-      name,
-    }));
-
     return this.prisma.product.create({
       data: {
         ...data,
         owner: { connect: { id: ownerId } },
-        categories: {
-          connect: categoryConnects,
-        },
+        categories: categoryNames,
       },
       include: {
         owner: true,
-        categories: true,
       },
     });
   }
@@ -28,7 +21,6 @@ class ProductRepository {
       where: { id },
       include: {
         owner: true,
-        categories: true,
       },
     });
   }
@@ -37,9 +29,7 @@ class ProductRepository {
     const updateData = { ...data };
 
     if (categoryNames) {
-      updateData.categories = {
-        set: categoryNames.map((name) => ({ name })),
-      };
+      updateData.categories = categoryNames;
     }
 
     return this.prisma.product.update({
@@ -47,7 +37,6 @@ class ProductRepository {
       data: updateData,
       include: {
         owner: true,
-        categories: true,
       },
     });
   }
@@ -67,7 +56,6 @@ class ProductRepository {
       },
       include: {
         owner: true,
-        categories: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -78,9 +66,6 @@ class ProductRepository {
   async getProductsByOwner(ownerId) {
     return this.prisma.product.findMany({
       where: { ownerId },
-      include: {
-        categories: true,
-      },
       orderBy: {
         createdAt: "desc",
       },

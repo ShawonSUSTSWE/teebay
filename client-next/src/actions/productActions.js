@@ -10,10 +10,7 @@ export const GET_OWNED_PRODUCTS_QUERY = gql`
       price
       rentalPrice
       rentDuration
-      categories {
-        id
-        name
-      }
+      categories
       createdAt
     }
   }
@@ -37,10 +34,7 @@ export const CREATE_PRODUCT = gql`
       price
       rentalPrice
       rentDuration
-      categories {
-        id
-        name
-      }
+      categories
       createdAt
     }
   }
@@ -56,10 +50,7 @@ export const GET_PRODUCT_DETAILS = gql`
       price
       rentalPrice
       rentDuration
-      categories {
-        id
-        name
-      }
+      categories
       owner {
         id
         email
@@ -82,10 +73,7 @@ export const UPDATE_PRODUCT = gql`
       price
       rentalPrice
       rentDuration
-      categories {
-        id
-        name
-      }
+      categories
     }
   }
 `;
@@ -100,10 +88,7 @@ export const GET_AVAILABLE_PRODUCTS = gql`
       price
       rentalPrice
       rentDuration
-      categories {
-        id
-        name
-      }
+      categories
       createdAt
     }
   }

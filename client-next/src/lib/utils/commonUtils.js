@@ -56,3 +56,5 @@ export const punctualizeString = (string = "", separator = "_") => {
 export const extractFieldFromObjectArray = (data, fieldName) => {
   return data.map((item) => item[fieldName]);
 };
+
+export const isNumeric = (value) => /^\d*\.?\d*$/.test(value);

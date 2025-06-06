@@ -6,6 +6,7 @@ import {
   getClassNames,
   isEmptyArray,
   isEmptyString,
+  isNumeric,
 } from "@/lib/utils/commonUtils";
 import { useMutation, useQuery } from "@apollo/client";
 import styles from "./EditProduct.module.css";
@@ -13,19 +14,13 @@ import { GET_PRODUCT_DETAILS, UPDATE_PRODUCT } from "@/actions/productActions";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/InputField/InputField";
 import MultiSelect from "@/components/MultiSelect/MultiSelect";
-import { GET_ALL_CATEGORIES } from "@/actions/categoryActions";
 import { useEffect, useState } from "react";
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { FormHelperText } from "@mui/material";
 import RentDuration from "@/lib/constants/RentDuration";
 import Button from "@/components/Button/Button";
 import { showErrorToast } from "@/lib/utils/toastUtils";
 import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import Categories from "@/lib/constants/Categories";
 
 const classNames = getClassNames(styles);
 
@@ -33,8 +28,6 @@ export default function EditProduct({ id }) {
   const { data, loading, error } = useQuery(GET_PRODUCT_DETAILS, {
     variables: { id },
   });
-  const { data: categoriesData, loading: categoriesLoading } =
-    useQuery(GET_ALL_CATEGORIES);
   const [updateProductMutation] = useMutation(UPDATE_PRODUCT);
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -58,9 +51,8 @@ export default function EditProduct({ id }) {
         rentalPrice,
         rentDuration,
       } = productData;
-      const productCategories = extractFieldFromObjectArray(categories, "name");
       setTitle(name);
-      setSelected(productCategories);
+      setSelected(categories);
       setDescription(description);
       setPrice(price ?? "");
       setRentalPrice(rentalPrice ?? "");
@@ -94,9 +86,9 @@ export default function EditProduct({ id }) {
     const updatedProductData = {
       name: title,
       description,
-      price,
-      rentalPrice,
-      rentDuration,
+      price: price ? Number(price) : null,
+      rentalPrice: rentalPrice ? Number(rentalPrice) : null,
+      rentDuration: rentDuration ? rentDuration : null,
     };
     try {
       await updateProductMutation({
@@ -127,7 +119,7 @@ export default function EditProduct({ id }) {
     priceError ||
     rentalPriceError;
 
-  if (loading || categoriesLoading) return <Loader />;
+  if (loading) return <Loader />;
 
   if (error) return null;
 
@@ -141,10 +133,7 @@ export default function EditProduct({ id }) {
       <div className={classNames("categories-container")}>
         <label>Categories</label>
         <MultiSelect
-          options={extractFieldFromObjectArray(
-            categoriesData.getAllCategories,
-            "name"
-          )}
+          options={Object.keys(Categories)}
           selected={selected}
           setSelected={setSelected}
         />
@@ -163,9 +152,8 @@ export default function EditProduct({ id }) {
           value={price}
           onChange={handlePriceChange}
           error={!!priceError}
+          showError={false}
         />
-        {priceError && <FormHelperText error>{priceError}</FormHelperText>}
-
         <InputField
           label={"Rent Price"}
           value={rentalPrice}
@@ -180,9 +168,13 @@ export default function EditProduct({ id }) {
           setValue={setRentDuration}
           options={RentDuration}
         />
-        {rentalPriceError && (
-          <FormHelperText error>{rentalPriceError}</FormHelperText>
-        )}
+      </div>
+      <div>
+        {priceError || rentalPriceError ? (
+          <FormHelperText error>
+            {priceError || rentalPriceError}
+          </FormHelperText>
+        ) : null}
       </div>
       <Button
         className={classNames("edit-button")}

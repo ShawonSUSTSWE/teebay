@@ -3,6 +3,7 @@ import {
   getClassNames,
 } from "@/lib/utils/commonUtils";
 import styles from "./ProductDetails.module.css";
+import Categories from "@/lib/constants/Categories";
 
 const classNames = getClassNames(styles);
 
@@ -20,7 +21,7 @@ export default function ProductDetails({
       <h3>{name}</h3>
       <p className={classNames("categories")}>
         <strong>Categories:</strong>{" "}
-        {categories?.map((cat) => cat.name.toLowerCase()).join(", ")}
+        {categories.map((cat) => Categories[cat]).join(", ")}
       </p>
       <p>
         {price && (

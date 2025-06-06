@@ -17,13 +17,6 @@ export const productTypeDefs = gql`
     MONTHLY
   }
 
-  type Category {
-    id: ID!
-    name: String!
-    createdAt: String!
-    updatedAt: String!
-  }
-
   type Product {
     id: ID!
     name: String!
@@ -33,7 +26,7 @@ export const productTypeDefs = gql`
     rentDuration: RentDuration
     status: ProductStatus!
     owner: User
-    categories: [Category!]!
+    categories: [String!]!
     createdAt: Date!
     updatedAt: Date!
   }

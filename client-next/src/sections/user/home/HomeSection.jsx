@@ -3,7 +3,6 @@
 import { getClassNames } from "@/lib/utils/commonUtils";
 import styles from "./HomeSection.module.css";
 import Button from "@/components/Button/Button";
-import { logout } from "@/actions/authActions";
 import { useRouter } from "next/navigation";
 import SectionHeader from "@/components/SectionHeader/SectionHeader";
 import ProductList from "@/components/ProductList/ProductList";
@@ -45,11 +44,6 @@ export default function HomeSection() {
     },
   });
 
-  const handleLogout = async () => {
-    await logout();
-    router.push("/login");
-  };
-
   const deleteProduct = async () => {
     try {
       await deleteProductMutation({ variables: { id: productToBeDeleted } });
@@ -81,13 +75,6 @@ export default function HomeSection() {
 
   return (
     <div className={classNames("container")}>
-      <Button
-        className={classNames("button")}
-        variant="secondary"
-        onClick={handleLogout}
-      >
-        LOGOUT
-      </Button>
       <div className={classNames("my-product-section")}>
         <SectionHeader header="MY PRODUCTS" />
         {loading ? (

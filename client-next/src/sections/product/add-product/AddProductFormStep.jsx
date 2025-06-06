@@ -4,9 +4,10 @@ import Button from "@/components/Button/Button";
 import Input from "@/components/Input/Input";
 import { useProductForm } from "@/hooks/useProductForm";
 import { getClassNames, isEmptyString } from "@/lib/utils/commonUtils";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./AddProductFormStep.module.css";
+import { routeToNextProductCreatePage } from "@/lib/utils/routeUtils";
 
 const classNames = getClassNames(styles);
 
@@ -14,11 +15,11 @@ export default function AddProductFormStep({
   promptText,
   fieldKey,
   inputType = "text",
-  nextRoute,
   showBackButton = true,
   validateNext = isEmptyString,
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { formData, updateForm } = useProductForm();
   const [fieldValue, setFieldValue] = useState(formData[fieldKey] || "");
 
@@ -34,6 +35,7 @@ export default function AddProductFormStep({
 
   const handleNext = () => {
     updateForm({ [fieldKey]: fieldValue });
+    const nextRoute = routeToNextProductCreatePage(pathname);
     router.push(nextRoute);
   };
 

@@ -3,7 +3,7 @@
 import Button from "@/components/Button/Button";
 import { useProductForm } from "@/hooks/useProductForm";
 import { getClassNames, isEmptyString } from "@/lib/utils/commonUtils";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./AddPrice.module.css";
 import Input from "@/components/Input/Input";
@@ -16,6 +16,8 @@ import {
   Select,
 } from "@mui/material";
 import RentDuration from "@/lib/constants/RentDuration";
+import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import { routeToNextProductCreatePage } from "@/lib/utils/routeUtils";
 
 const classNames = getClassNames(styles);
 
@@ -23,6 +25,7 @@ const isNumeric = (value) => /^\d*\.?\d*$/.test(value);
 
 export default function AddPrice({}) {
   const router = useRouter();
+  const pathname = usePathname();
   const { formData, updateForm } = useProductForm();
   const [price, setPrice] = useState(formData.price || "");
   const [rentalPrice, setRentalPrice] = useState(formData.rentalPrice || "");
@@ -43,7 +46,8 @@ export default function AddPrice({}) {
 
   const handleNext = () => {
     updateForm({ price, rentalPrice, rentDuration });
-    router.push("/add-product/categories");
+    const nextRoute = routeToNextProductCreatePage(pathname);
+    router.push(nextRoute);
   };
 
   const handlePriceChange = (e) => {
@@ -97,19 +101,13 @@ export default function AddPrice({}) {
           error={!!rentalPriceError}
           showError={false}
         />
-        <FormControl fullWidth>
-          <InputLabel id="rent-duration-label">Duration</InputLabel>
-          <Select
-            labelId="rent-duration-label"
-            value={rentDuration}
-            onChange={(e) => setRentDuration(e.target.value)}
-            size="small"
-          >
-            {Object.entries(RentDuration).map(([key, value]) => (
-              <MenuItem value={key}>{value}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <CustomSelect
+          label={"Duration"}
+          labelId={"rent-duration-label"}
+          value={rentDuration}
+          setValue={setRentDuration}
+          options={RentDuration}
+        />
       </div>
       {rentalPriceError && (
         <FormHelperText error>{rentalPriceError}</FormHelperText>

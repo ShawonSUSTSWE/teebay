@@ -1,7 +1,8 @@
+import { PageRoutes } from "@/lib/utils/routeUtils";
 import { redirect } from "next/navigation";
 
 const Page = () => {
-  redirect("/add-product/title");
+  redirect(PageRoutes.productCreate.addTitle);
 };
 
 export default Page;

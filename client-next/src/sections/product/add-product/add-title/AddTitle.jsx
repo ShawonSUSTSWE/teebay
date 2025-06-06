@@ -5,7 +5,6 @@ export default function AddTitle({}) {
     <AddProductFormStep
       fieldKey={"title"}
       promptText={"Select a title for your product"}
-      nextRoute={"/add-product/description"}
       showBackButton={false}
     />
   );

@@ -6,7 +6,6 @@ export default function AddDescription({}) {
       fieldKey={"description"}
       inputType={"textarea"}
       promptText={"Select a description for your product"}
-      nextRoute={"/add-product/price"}
     />
   );
 }

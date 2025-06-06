@@ -6,7 +6,12 @@ export const userResolvers = {
     getUserById: async (_, { id }, { userService }) => {
       return await userService.getUserById(id);
     },
-    session: async (_, __, { user }) => {
+    session: async (_, __, { user, userService, res }) => {
+      console.log("Session requested");
+      if (!user) {
+        console.log("Logging out");
+        return await userService.logout(res);
+      }
       return user;
     },
   },

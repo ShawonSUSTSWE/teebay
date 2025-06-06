@@ -9,6 +9,10 @@ import ProductDetails from "@/components/ProductDetails/ProductDetails";
 import { PageRoutes } from "@/lib/utils/routeUtils";
 import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
+import useSession from "@/hooks/useSession";
+import { useRef, useState } from "react";
+import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
+import useOnClickOutside from "@/hooks/useOnClickOutside";
 
 const classNames = getClassNames(styles);
 
@@ -16,7 +20,10 @@ export default function ProductDetailsSection({ id }) {
   const { data, loading, error } = useQuery(GET_PRODUCT_DETAILS, {
     variables: { id },
   });
+  const { user, loading: sessionLoading } = useSession();
   const router = useRouter();
+  const [modalType, setModalType] = useState(null);
+  const buyModalRef = useRef(null);
 
   if (loading) return <Loader />;
 
@@ -26,16 +33,57 @@ export default function ProductDetailsSection({ id }) {
 
   const routeToEditPage = () => {
     const page = PageRoutes.productEditPage(productData.id);
-    console.log({ page });
     router.push(page);
   };
+
+  const showModal = (type) => {
+    setModalType(type);
+  };
+
+  const buyProduct = () => {
+    console.log("Buying product: " + productData.id);
+  };
+
+  const closeModal = () => {
+    setModalType(null);
+  };
+
+  const renderModal = () => {
+    switch (modalType) {
+      case "BUY":
+        return (
+          <ConfirmationModal
+            confirmMessage="Are you sure you want to buy the product?"
+            confirm={buyProduct}
+            cancel={closeModal}
+            ref={buyModalRef}
+          />
+        );
+
+      case "RENT":
+        return <div>Rent</div>;
+
+      default:
+        return null;
+    }
+  };
+
+  // useOnClickOutside(buyModalRef, closeModal);
 
   return (
     <div className={classNames("wrapper")}>
       <div className={classNames("container")}>
         <ProductDetails {...productData} />
         <div className={classNames("button-container")}>
-          <Button onClick={routeToEditPage}>Edit Product</Button>
+          {user?.id === productData?.owner?.id ? (
+            <Button onClick={routeToEditPage}>Edit Product</Button>
+          ) : (
+            <div className={classNames("button-container")}>
+              <Button onClick={() => showModal("RENT")}>Rent</Button>
+              <Button onClick={() => showModal("BUY")}>Buy</Button>
+            </div>
+          )}
+          {renderModal()}
         </div>
       </div>
     </div>

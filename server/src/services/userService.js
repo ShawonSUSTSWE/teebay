@@ -1,6 +1,6 @@
-import { clearCookie, generateToken } from "../../config/jwt.js";
-import { PRISMA_DUPLICATE_ERROR_CODE } from "../constants/ApplicationConstants.js";
+import { clearCookie, generateToken } from "../config/jwt.js";
 import UserRepository from "../repositories/userRepository.js";
+import { PRISMA_DUPLICATE_ERROR_CODE } from "../lib/constants/ApplicationConstants.js";
 
 class UserService {
   constructor(prisma) {

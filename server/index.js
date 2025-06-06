@@ -4,10 +4,12 @@ import dotenv from "dotenv";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import prisma from "./src/config/DB.js";
-import { schema } from "./src/lib/schema/schema.js";
-import { createServices } from "./src/lib/services/index.js";
 import cookieParser from "cookie-parser";
-import { verifyToken } from "./src/config/jwt.js";
+import { clearCookie, verifyToken } from "./src/config/jwt.js";
+import logGraphQLRequests from "./src/config/logger.js";
+import { schema } from "./src/graphql/schema/schema.js";
+import { createServices } from "./src/services/index.js";
+import PublicOperations from "./src/lib/constants/PublicOperations.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
@@ -22,6 +24,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(logGraphQLRequests);
 
 const server = new ApolloServer({
   ...schema,
@@ -46,6 +49,10 @@ app.use(
         }
       }
 
+      if (!PublicOperations.includes(req.body?.operationName) && !user) {
+        clearCookie(res);
+        throw new Error("Unauthorized!!");
+      }
       return {
         req,
         res,

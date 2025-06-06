@@ -9,6 +9,7 @@ import ProductList from "@/components/ProductList/ProductList";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   DELETE_PRODUCT,
+  GET_AVAILABLE_PRODUCTS,
   GET_OWNED_PRODUCTS_QUERY,
 } from "@/actions/productActions";
 import Loader from "@/components/Loader/Loader";
@@ -16,6 +17,7 @@ import { showErrorToast } from "@/lib/utils/toastUtils";
 import { useRef, useState } from "react";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 import useOnClickOutside from "@/hooks/useOnClickOutside";
+import { removeFromCacheList } from "@/lib/utils/cacheUtils";
 
 const classNames = getClassNames(styles);
 
@@ -29,17 +31,19 @@ export default function HomeSection() {
 
   const [deleteProductMutation] = useMutation(DELETE_PRODUCT, {
     update(cache, { data }) {
-      const { getProductsByOwner } = cache.readQuery({
-        query: GET_OWNED_PRODUCTS_QUERY,
-      });
+      const removedProduct = data.deleteProduct;
 
-      cache.writeQuery({
+      removeFromCacheList({
+        cache,
         query: GET_OWNED_PRODUCTS_QUERY,
-        data: {
-          getProductsByOwner: getProductsByOwner.filter(
-            (product) => product.id !== data.deleteProduct.id
-          ),
-        },
+        fieldName: "getProductsByOwner",
+        removedItem: removedProduct,
+      });
+      removeFromCacheList({
+        cache,
+        query: GET_AVAILABLE_PRODUCTS,
+        fieldName: "getAllAvailableProducts",
+        removedItem: removedProduct,
       });
     },
   });

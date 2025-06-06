@@ -10,9 +10,11 @@ import ProductInfo from "./ProductInfo";
 import { useMutation } from "@apollo/client";
 import {
   CREATE_PRODUCT,
+  GET_AVAILABLE_PRODUCTS,
   GET_OWNED_PRODUCTS_QUERY,
 } from "@/actions/productActions";
 import { showErrorToast } from "@/lib/utils/toastUtils";
+import { prependToCacheList } from "@/lib/utils/cacheUtils";
 
 const classNames = getClassNames(styles);
 
@@ -23,15 +25,19 @@ export default function ProductSummary({}) {
   const { formData, resetForm } = useProductForm();
   const [addProduct] = useMutation(CREATE_PRODUCT, {
     update(cache, { data }) {
-      const { getProductsByOwner } = cache.readQuery({
-        query: GET_OWNED_PRODUCTS_QUERY,
-      });
+      const newProduct = data.createProduct;
 
-      cache.writeQuery({
+      prependToCacheList({
+        cache,
         query: GET_OWNED_PRODUCTS_QUERY,
-        data: {
-          getProductsByOwner: [data.createProduct, ...getProductsByOwner],
-        },
+        fieldName: "getProductsByOwner",
+        newItem: newProduct,
+      });
+      prependToCacheList({
+        cache,
+        query: GET_AVAILABLE_PRODUCTS,
+        fieldName: "getAllAvailableProducts",
+        newItem: newProduct,
       });
     },
   });

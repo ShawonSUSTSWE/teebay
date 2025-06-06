@@ -25,10 +25,6 @@ export default function ProductDetailsSection({ id }) {
   const [modalType, setModalType] = useState(null);
   const buyModalRef = useRef(null);
 
-  if (loading) return <Loader />;
-
-  if (error) return null;
-
   const productData = data?.getProductById;
 
   const routeToEditPage = () => {
@@ -68,7 +64,11 @@ export default function ProductDetailsSection({ id }) {
     }
   };
 
-  // useOnClickOutside(buyModalRef, closeModal);
+  useOnClickOutside(buyModalRef, closeModal);
+
+  if (loading) return <Loader />;
+
+  if (error) return null;
 
   return (
     <div className={classNames("wrapper")}>
@@ -79,8 +79,12 @@ export default function ProductDetailsSection({ id }) {
             <Button onClick={routeToEditPage}>Edit Product</Button>
           ) : (
             <div className={classNames("button-container")}>
-              <Button onClick={() => showModal("RENT")}>Rent</Button>
-              <Button onClick={() => showModal("BUY")}>Buy</Button>
+              {productData?.rentalPrice && (
+                <Button onClick={() => showModal("RENT")}>Rent</Button>
+              )}
+              {productData?.price && (
+                <Button onClick={() => showModal("BUY")}>Buy</Button>
+              )}
             </div>
           )}
           {renderModal()}

@@ -62,9 +62,9 @@ export default function EditProduct({ id }) {
       setTitle(name);
       setSelected(productCategories);
       setDescription(description);
-      setPrice(price);
-      setRentalPrice(rentalPrice);
-      setRentDuration(rentDuration);
+      setPrice(price ?? "");
+      setRentalPrice(rentalPrice ?? "");
+      setRentDuration(rentDuration ?? "");
     }
   }, [productData]);
 

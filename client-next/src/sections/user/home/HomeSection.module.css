@@ -4,13 +4,10 @@
   gap: 20px;
   flex-direction: column;
   align-items: center;
-  padding: 50px 0px;
+  padding: 100px 0px 50px;
 }
 
 .button {
-  /* position: fixed;
-  top: 20px;
-  right: 20px; */
   align-self: flex-end;
   width: 80px;
 }

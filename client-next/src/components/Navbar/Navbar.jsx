@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="sticky">
+    <AppBar position="fixed">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ mr: 4 }}>
           Teebay

@@ -8,7 +8,7 @@ export default async function ProductLayout({ children }) {
   return (
     <div className={classNames("container")}>
       <Navbar />
-      {children}
+      <div className={classNames("content-container")}>{children}</div>
     </div>
   );
 }

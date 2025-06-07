@@ -47,8 +47,11 @@ class TransactionService {
     return transaction;
   }
 
-  async getUserTransactions(userId) {
-    return this.transactionRepository.findByUser(userId);
+  async getUserTransactions(userId, transactionType) {
+    return this.transactionRepository.getUserTransactionsByType(
+      userId,
+      transactionType
+    );
   }
 }
 

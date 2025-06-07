@@ -6,7 +6,6 @@ export const transactionResolvers = {
       { user, transactionService, productService }
     ) => {
       if (!user) throw new Error("Unauthorized");
-      console.log(data);
       return transactionService.buyProduct(data, user.id, productService);
     },
     rentProduct: async (
@@ -20,9 +19,9 @@ export const transactionResolvers = {
   },
 
   Query: {
-    getMyTransactions: async (_, __, { user, transactionService }) => {
+    getMyTransactions: async (_, { type }, { user, transactionService }) => {
       if (!user) throw new Error("Unauthorized");
-      return transactionService.getUserTransactions(user.id);
+      return transactionService.getUserTransactions(user.id, type);
     },
   },
 };

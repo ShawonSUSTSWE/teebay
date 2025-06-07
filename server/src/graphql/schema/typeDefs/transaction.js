@@ -43,6 +43,6 @@ export const transactionTypeDefs = gql`
   }
 
   type Query {
-    getMyTransactions: [Transaction!]!
+    getMyTransactions(type: String!): [Transaction!]!
   }
 `;

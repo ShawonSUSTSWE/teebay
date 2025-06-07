@@ -10,6 +10,9 @@ export default function ProductList({ products = [], ...props }) {
       {products.map((product) => (
         <ProductCard key={product.id} product={product} {...props} />
       ))}
+      {products.length === 0 && (
+        <div className={classNames("text")}>No items to show</div>
+      )}
     </div>
   );
 }

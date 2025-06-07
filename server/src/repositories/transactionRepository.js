@@ -1,3 +1,4 @@
+import TransactionRequestBodyTypeMap from "../lib/constants/TransactionRequestBodyTypeMap.js";
 import TransactionType from "../lib/constants/TransactionType.js";
 
 class TransactionRepository {
@@ -45,10 +46,12 @@ class TransactionRepository {
     });
   }
 
-  async getTransactionsByUser(userId) {
+  async getUserTransactionsByType(userId, type) {
+    const { type: transactionType, role } = TransactionRequestBodyTypeMap[type];
     return this.prisma.transaction.findMany({
       where: {
-        OR: [{ buyerId: userId }, { sellerId: userId }],
+        type: transactionType,
+        [role]: userId,
       },
       include: {
         product: true,

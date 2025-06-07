@@ -2,8 +2,11 @@
 
 import { getClassNames } from "@/lib/utils/commonUtils";
 import styles from "./ProductDetailsSection.module.css";
-import { useQuery } from "@apollo/client";
-import { GET_PRODUCT_DETAILS } from "@/actions/productActions";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  GET_AVAILABLE_PRODUCTS,
+  GET_PRODUCT_DETAILS,
+} from "@/actions/productActions";
 import Loader from "@/components/Loader/Loader";
 import ProductDetails from "@/components/ProductDetails/ProductDetails";
 import { PageRoutes } from "@/lib/utils/routeUtils";
@@ -13,6 +16,9 @@ import useSession from "@/hooks/useSession";
 import { useRef, useState } from "react";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 import useOnClickOutside from "@/hooks/useOnClickOutside";
+import { BUY_PRODUCT } from "@/actions/transactionActions";
+import { showErrorToast } from "@/lib/utils/toastUtils";
+import { removeFromCacheList } from "@/lib/utils/cacheUtils";
 
 const classNames = getClassNames(styles);
 
@@ -20,7 +26,19 @@ export default function ProductDetailsSection({ id }) {
   const { data, loading, error } = useQuery(GET_PRODUCT_DETAILS, {
     variables: { id },
   });
-  const { user, loading: sessionLoading } = useSession();
+  const [buyProductMutation] = useMutation(BUY_PRODUCT, {
+    update(cache, { data }) {
+      const removedProduct = data.buyProduct.product;
+
+      removeFromCacheList({
+        cache,
+        query: GET_AVAILABLE_PRODUCTS,
+        fieldName: "getAllAvailableProducts",
+        removedItem: removedProduct,
+      });
+    },
+  });
+  const { user } = useSession();
   const router = useRouter();
   const [modalType, setModalType] = useState(null);
   const buyModalRef = useRef(null);
@@ -36,8 +54,16 @@ export default function ProductDetailsSection({ id }) {
     setModalType(type);
   };
 
-  const buyProduct = () => {
-    console.log("Buying product: " + productData.id);
+  const buyProduct = async () => {
+    try {
+      await buyProductMutation({
+        variables: { data: { productId: productData.id } },
+      });
+    } catch (error) {
+      showErrorToast(error.message);
+    } finally {
+      closeModal();
+    }
   };
 
   const closeModal = () => {

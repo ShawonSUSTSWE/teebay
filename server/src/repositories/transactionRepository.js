@@ -6,13 +6,18 @@ class TransactionRepository {
   }
 
   async createBuyTransaction({ productId, buyerId, sellerId, amount }) {
-    return prisma.transaction.create({
+    return this.prisma.transaction.create({
       data: {
         productId,
         buyerId,
         sellerId,
         type: TransactionType.BUY,
         amount,
+      },
+      include: {
+        product: true,
+        buyer: true,
+        seller: true,
       },
     });
   }
@@ -26,7 +31,7 @@ class TransactionRepository {
     endDate,
     rentDuration,
   }) {
-    return prisma.transaction.create({
+    return this.prisma.transaction.create({
       data: {
         productId,
         buyerId,
@@ -41,7 +46,7 @@ class TransactionRepository {
   }
 
   async getTransactionsByUser(userId) {
-    return prisma.transaction.findMany({
+    return this.prisma.transaction.findMany({
       where: {
         OR: [{ buyerId: userId }, { sellerId: userId }],
       },

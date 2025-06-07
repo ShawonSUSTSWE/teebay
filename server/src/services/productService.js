@@ -38,9 +38,7 @@ class ProductService {
   async deleteProduct(id, user) {
     await this.checkProductOwnership(id, user.id);
 
-    const product = await this.productRepository.deleteProduct(id);
-    console.log("Product deleted:", product);
-    return product;
+    return await this.productRepository.deleteProduct(id);
   }
 
   async getAllAvailableProducts() {

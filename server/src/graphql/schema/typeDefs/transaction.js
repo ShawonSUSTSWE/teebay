@@ -1,8 +1,6 @@
 import gql from "graphql-tag";
 
 export const transactionTypeDefs = gql`
-  scalar Date
-
   enum TransactionType {
     BUY
     RENT
@@ -17,9 +15,9 @@ export const transactionTypeDefs = gql`
 
   type Transaction {
     id: ID!
-    productId: ID!
-    buyerId: ID!
-    sellerId: ID!
+    product: Product
+    buyer: User
+    seller: User
     type: TransactionType!
     startDate: Date
     endDate: Date

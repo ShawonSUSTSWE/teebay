@@ -1,14 +1,12 @@
-import ProductRepository from "../repositories/productRepository.js";
 import TransactionRepository from "../repositories/transactionRepository.js";
 
 class TransactionService {
   constructor(prisma) {
     this.transactionRepository = new TransactionRepository(prisma);
-    this.productRepository = new ProductRepository(prisma);
   }
 
-  async buyProduct({ productId }, buyerId) {
-    const product = await this.productRepository.findById(productId);
+  async buyProduct({ productId }, buyerId, productService) {
+    const product = await productService.getProductById(productId);
     if (!product) throw new Error("Product not found");
     if (product.status !== "AVAILABLE")
       throw new Error("Product not available for purchase");
@@ -20,12 +18,16 @@ class TransactionService {
       amount: product.price,
     });
 
-    await this.productRepository.updateStatus(productId, "SOLD");
+    await productService.updateProductStatus(productId, "SOLD");
     return transaction;
   }
 
-  async rentProduct({ productId, startDate, endDate }, buyerId) {
-    const product = await this.productRepository.findById(productId);
+  async rentProduct(
+    { productId, startDate, endDate },
+    buyerId,
+    productService
+  ) {
+    const product = await productService.getProductById(productId);
     if (!product) throw new Error("Product not found");
     if (product.status !== "AVAILABLE")
       throw new Error("Product not available for rent");

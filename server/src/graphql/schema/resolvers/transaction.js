@@ -1,15 +1,21 @@
-import { dateScalar } from "../../scalars/DateScalar.js";
-
 export const transactionResolvers = {
-  Date: dateScalar,
   Mutation: {
-    buyProduct: async (_, { data }, { user, transactionService }) => {
+    buyProduct: async (
+      _,
+      { data },
+      { user, transactionService, productService }
+    ) => {
       if (!user) throw new Error("Unauthorized");
-      return transactionService.buyProduct(data, user.id);
+      console.log(data);
+      return transactionService.buyProduct(data, user.id, productService);
     },
-    rentProduct: async (_, { data }, { user, transactionService }) => {
+    rentProduct: async (
+      _,
+      { data },
+      { user, transactionService, productService }
+    ) => {
       if (!user) throw new Error("Unauthorized");
-      return transactionService.rentProduct(data, user.id);
+      return transactionService.rentProduct(data, user.id, productService);
     },
   },
 

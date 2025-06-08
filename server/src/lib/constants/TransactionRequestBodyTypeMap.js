@@ -1,4 +1,4 @@
-import TransactionType from "./TransactionType.js";
+import { TransactionType } from "@prisma/client";
 
 export default {
   BOUGHT: { type: TransactionType.BUY, role: "buyerId" },

@@ -1,4 +1,4 @@
-import ProductStatus from "../lib/constants/ProductStatus.js";
+import { ProductStatus } from "@prisma/client";
 import ProductRepository from "../repositories/productRepository.js";
 
 class ProductService {

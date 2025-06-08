@@ -1,4 +1,4 @@
-import ProductStatus from "../lib/constants/ProductStatus.js";
+import { ProductStatus } from "@prisma/client";
 import TransactionRepository from "../repositories/transactionRepository.js";
 import ProductService from "./productService.js";
 
@@ -25,7 +25,10 @@ class TransactionService {
           amount: product.price,
         });
 
-        await transactionProductService.updateProductStatus(productId, "SOLD");
+        await transactionProductService.updateProductStatus(
+          productId,
+          ProductStatus.SOLD
+        );
         return transaction;
       }
     );
@@ -77,7 +80,7 @@ class TransactionService {
 
         await transactionProductService.updateProductStatus(
           productId,
-          "RENTED"
+          ProductStatus.RENTED
         );
         return transaction;
       }

@@ -1,5 +1,5 @@
+import { TransactionType } from "@prisma/client";
 import TransactionRequestBodyTypeMap from "../lib/constants/TransactionRequestBodyTypeMap.js";
-import TransactionType from "../lib/constants/TransactionType.js";
 
 class TransactionRepository {
   constructor(prisma) {
@@ -71,7 +71,7 @@ class TransactionRepository {
     const latestRentTransaction = await this.prisma.transaction.findFirst({
       where: {
         productId,
-        type: "RENT",
+        type: TransactionType.RENT,
         endDate: {
           not: null,
         },

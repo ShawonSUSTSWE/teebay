@@ -59,19 +59,25 @@ export default function ProductDetailsSection({ id }) {
   };
 
   const buyProduct = async () => {
+    let isSuccessful = false;
     try {
       await buyProductMutation({
         variables: { data: { productId: productData.id } },
       });
       showSuccessToast("Product bought successfully");
+      isSuccessful = true;
     } catch (error) {
       showErrorToast(error.message);
     } finally {
       closeModal();
+      if (isSuccessful) {
+        router.push(PageRoutes.home);
+      }
     }
   };
 
   const rentProduct = async () => {
+    let isSuccessful = false;
     if (!(startDate && endDate)) {
       showErrorToast("Please select both dates to proceed");
       return;
@@ -87,10 +93,14 @@ export default function ProductDetailsSection({ id }) {
         },
       });
       showSuccessToast("Product rented successfully");
+      isSuccessful = true;
     } catch (error) {
       showErrorToast(error.message);
     } finally {
       closeModal();
+      if (isSuccessful) {
+        router.push(PageRoutes.home);
+      }
     }
   };
 

@@ -16,9 +16,10 @@ import useSession from "@/hooks/useSession";
 import { useRef, useState } from "react";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 import useOnClickOutside from "@/hooks/useOnClickOutside";
-import { BUY_PRODUCT } from "@/actions/transactionActions";
-import { showErrorToast } from "@/lib/utils/toastUtils";
+import { BUY_PRODUCT, RENT_PRODUCT } from "@/actions/transactionActions";
+import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
 import { removeFromCacheList } from "@/lib/utils/cacheUtils";
+import RentalModal from "@/components/RentalModal/RentalModal";
 
 const classNames = getClassNames(styles);
 
@@ -38,9 +39,12 @@ export default function ProductDetailsSection({ id }) {
       });
     },
   });
+  const [rentProductMutation] = useMutation(RENT_PRODUCT);
   const { user } = useSession();
   const router = useRouter();
   const [modalType, setModalType] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const buyModalRef = useRef(null);
 
   const productData = data?.getProductById;
@@ -59,6 +63,30 @@ export default function ProductDetailsSection({ id }) {
       await buyProductMutation({
         variables: { data: { productId: productData.id } },
       });
+      showSuccessToast("Product bought successfully");
+    } catch (error) {
+      showErrorToast(error.message);
+    } finally {
+      closeModal();
+    }
+  };
+
+  const rentProduct = async () => {
+    if (!(startDate && endDate)) {
+      showErrorToast("Please select both dates to proceed");
+      return;
+    }
+    try {
+      await rentProductMutation({
+        variables: {
+          data: {
+            productId: productData.id,
+            startDate: startDate?.toDate(),
+            endDate: endDate?.toDate(),
+          },
+        },
+      });
+      showSuccessToast("Product rented successfully");
     } catch (error) {
       showErrorToast(error.message);
     } finally {
@@ -83,7 +111,16 @@ export default function ProductDetailsSection({ id }) {
         );
 
       case "RENT":
-        return <div>Rent</div>;
+        return (
+          <RentalModal
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            cancel={closeModal}
+            confirm={rentProduct}
+          />
+        );
 
       default:
         return null;

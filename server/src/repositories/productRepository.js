@@ -1,3 +1,5 @@
+import ProductStatus from "../lib/constants/ProductStatus.js";
+
 class ProductRepository {
   constructor(prisma) {
     this.prisma = prisma;
@@ -51,7 +53,7 @@ class ProductRepository {
     return this.prisma.product.findMany({
       where: {
         status: {
-          in: ["AVAILABLE"],
+          in: [ProductStatus.AVAILABLE, ProductStatus.RENTED],
         },
       },
       include: {
@@ -72,8 +74,8 @@ class ProductRepository {
     });
   }
 
-  async updateProductStatus(productId, newStatus) {
-    return this.prisma.product.update({
+  async updateProductStatus(productId, newStatus, prisma = this.prisma) {
+    return prisma.product.update({
       where: { id: productId },
       data: { status: newStatus },
     });

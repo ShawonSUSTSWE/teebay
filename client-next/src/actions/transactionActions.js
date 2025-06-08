@@ -47,3 +47,33 @@ export const TRANSACTION_LIST = gql`
     }
   }
 `;
+
+export const RENT_PRODUCT = gql`
+  mutation rentProduct($data: RentInput!) {
+    rentProduct(data: $data) {
+      id
+      product {
+        id
+        name
+      }
+      buyer {
+        id
+        firstName
+        lastName
+        email
+      }
+      seller {
+        id
+        firstName
+        lastName
+        email
+      }
+      type
+      amount
+      rentDuration
+      startDate
+      endDate
+      createdAt
+    }
+  }
+`;

@@ -34,7 +34,6 @@ export const transactionTypeDefs = gql`
     productId: ID!
     startDate: Date!
     endDate: Date!
-    rentDuration: RentDuration!
   }
 
   type Mutation {

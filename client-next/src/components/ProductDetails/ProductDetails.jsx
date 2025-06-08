@@ -8,8 +8,8 @@ import Categories from "@/lib/constants/Categories";
 const classNames = getClassNames(styles);
 
 export default function ProductDetails({
-  name,
-  categories,
+  name = "",
+  categories = [],
   price,
   description,
   rentalPrice,

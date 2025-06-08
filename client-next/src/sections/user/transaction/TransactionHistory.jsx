@@ -9,6 +9,7 @@ import styles from "./TransactionHistory.module.css";
 import ProductList from "@/components/ProductList/ProductList";
 import TransactionType from "@/lib/constants/TransactionType";
 import { useMemo } from "react";
+import TransactionCard from "@/components/TransactionCard/TransactionCard";
 
 const classNames = getClassNames(styles);
 
@@ -23,21 +24,21 @@ export default function TransactionHistory({ section }) {
 
   const transactions = productsList?.getMyTransactions || [];
 
-  const products = useMemo(() => {
-    return transactions.length > 0
-      ? transactions.map((transaction) => ({
-          ...transaction.product,
-          ...(transaction.type === TransactionType.BUY
-            ? { price: transaction.amount }
-            : {
-                rentPrice: transaction.amount,
-                rentDuration: transaction.rentDuration,
-                rentStartDate: transaction.startDate,
-                rentEndDate: transaction.endDate,
-              }),
-        }))
-      : [];
-  }, [transactions]);
+  // const products = useMemo(() => {
+  //   return transactions.length > 0
+  //     ? transactions.map((transaction) => ({
+  //         ...transaction.product,
+  //         ...(transaction.type === TransactionType.BUY
+  //           ? { price: transaction.amount }
+  //           : {
+  //               rentalPrice: transaction.amount,
+  //               rentDuration: transaction.rentDuration,
+  //               rentStartDate: transaction.startDate,
+  //               rentEndDate: transaction.endDate,
+  //             }),
+  //       }))
+  //     : [];
+  // }, [transactions]);
 
   if (loading) {
     return <Loader />;
@@ -49,7 +50,16 @@ export default function TransactionHistory({ section }) {
 
   return (
     <div className={classNames("container")}>
-      <ProductList products={products} />
+      {transactions.map((transaction) => (
+        <TransactionCard
+          key={transaction.id}
+          transaction={transaction}
+          section={section}
+        />
+      ))}
+      {transactions.length === 0 && (
+        <div className={classNames("text")}>No items to show</div>
+      )}
     </div>
   );
 }

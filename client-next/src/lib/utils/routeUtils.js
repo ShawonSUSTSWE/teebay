@@ -6,6 +6,7 @@ export const PageRoutes = {
   home: `/home`,
   productsList: `/products`,
   transactions: `/transactions`,
+  transactionDetails: (id) => `/transactions/${id}`,
   productCreate: {
     addTitle: `/add-product/title`,
     addCategory: `/add-product/categories`,

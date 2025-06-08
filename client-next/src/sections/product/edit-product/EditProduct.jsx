@@ -2,10 +2,8 @@
 
 import Loader from "@/components/Loader/Loader";
 import {
-  extractFieldFromObjectArray,
   getClassNames,
   isEmptyArray,
-  isEmptyString,
   isNumeric,
 } from "@/lib/utils/commonUtils";
 import { useMutation, useQuery } from "@apollo/client";
@@ -18,9 +16,10 @@ import { useEffect, useState } from "react";
 import { FormHelperText } from "@mui/material";
 import RentDuration from "@/lib/constants/RentDuration";
 import Button from "@/components/Button/Button";
-import { showErrorToast } from "@/lib/utils/toastUtils";
+import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
 import CustomSelect from "@/components/CustomSelect/CustomSelect";
 import Categories from "@/lib/constants/Categories";
+import { PageRoutes } from "@/lib/utils/routeUtils";
 
 const classNames = getClassNames(styles);
 
@@ -30,19 +29,19 @@ export default function EditProduct({ id }) {
   });
   const [updateProductMutation] = useMutation(UPDATE_PRODUCT);
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [selected, setSelected] = useState([]);
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [rentalPrice, setRentalPrice] = useState("");
-  const [rentDuration, setRentDuration] = useState("");
-  const [priceError, setPriceError] = useState("");
-  const [rentalPriceError, setRentalPriceError] = useState("");
 
-  const productData = data?.getProductById;
+  const [product, setProduct] = useState({
+    title: "",
+    description: "",
+    price: "",
+    rentalPrice: "",
+    rentDuration: "",
+  });
+  const [categories, setCategories] = useState([]);
+  const [errors, setErrors] = useState({ price: "", rentalPrice: "" });
 
   useEffect(() => {
-    if (productData) {
+    if (data?.getProductById) {
       const {
         name,
         categories,
@@ -50,135 +49,133 @@ export default function EditProduct({ id }) {
         price,
         rentalPrice,
         rentDuration,
-      } = productData;
-      setTitle(name);
-      setSelected(categories);
-      setDescription(description);
-      setPrice(price ?? "");
-      setRentalPrice(rentalPrice ?? "");
-      setRentDuration(rentDuration ?? "");
+      } = data.getProductById;
+      setProduct({
+        title: name,
+        description,
+        price: price ?? "",
+        rentalPrice: rentalPrice ?? "",
+        rentDuration: rentDuration ?? "",
+      });
+      setCategories(categories);
     }
-  }, [productData]);
+  }, [data]);
 
-  const handlePriceChange = (e) => {
+  const handleChange = (field) => (e) => {
     const value = e.target.value;
-    if (isNumeric(value)) {
-      setPrice(value);
-      setPriceError("");
-    } else {
-      setPrice(value);
-      setPriceError("Only numeric values are allowed");
+
+    setProduct((prev) => ({ ...prev, [field]: value }));
+
+    if (field === "price") {
+      setErrors((prev) => ({
+        ...prev,
+        price: isNumeric(value) ? "" : "Only numeric values are allowed",
+      }));
+    } else if (field === "rentalPrice") {
+      setErrors((prev) => ({
+        ...prev,
+        rentalPrice: isNumeric(value) ? "" : "Only numeric values are allowed",
+      }));
     }
   };
 
-  const handleRentalPriceChange = (e) => {
-    const value = e.target.value;
-    if (isNumeric(value)) {
-      setRentalPrice(value);
-      setRentalPriceError("");
-    } else {
-      setRentalPrice(value);
-      setRentalPriceError("Only numeric values are allowed");
-    }
-  };
+  const isValid =
+    product.title &&
+    product.description &&
+    !isEmptyArray(categories) &&
+    ((product.price && !product.rentalPrice && !product.rentDuration) ||
+      (product.rentalPrice && product.rentDuration)) &&
+    !errors.price &&
+    !errors.rentalPrice;
 
   const submitDataForEdit = async () => {
-    const updatedProductData = {
-      name: title,
-      description,
-      price: price ? Number(price) : null,
-      rentalPrice: rentalPrice ? Number(rentalPrice) : null,
-      rentDuration: rentDuration ? rentDuration : null,
-    };
     try {
       await updateProductMutation({
         variables: {
-          id: id,
-          data: updatedProductData,
-          categoryNames: selected,
+          id,
+          data: {
+            name: product.title,
+            description: product.description,
+            price: product.price ? Number(product.price) : null,
+            rentalPrice: product.rentalPrice
+              ? Number(product.rentalPrice)
+              : null,
+            rentDuration: product.rentDuration || null,
+          },
+          categoryNames: categories,
         },
       });
-      router.push("/");
+      showSuccessToast("Product Edited Successfully");
+      router.push(PageRoutes.home);
     } catch (error) {
       showErrorToast(error.message);
     }
   };
 
-  const hasPrice = !isEmptyString(price);
-  const hasRentalPrice = !isEmptyString(rentalPrice);
-  const hasRentDuration = !isEmptyString(rentDuration);
-
-  const isEditValid =
-    !title ||
-    !description ||
-    isEmptyArray(selected) ||
-    !(
-      (hasPrice && !hasRentalPrice && !hasRentDuration) ||
-      (hasRentalPrice && hasRentDuration)
-    ) ||
-    priceError ||
-    rentalPriceError;
-
   if (loading) return <Loader />;
-
   if (error) return null;
 
   return (
     <div className={classNames("container")}>
       <InputField
-        label={"Title"}
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        label="Title"
+        value={product.title}
+        onChange={handleChange("title")}
       />
+
       <div className={classNames("categories-container")}>
         <label>Categories</label>
         <MultiSelect
           options={Object.keys(Categories)}
-          selected={selected}
-          setSelected={setSelected}
+          selected={categories}
+          setSelected={setCategories}
         />
       </div>
+
       <div className={classNames("categories-container")}>
         <label>Description</label>
         <textarea
           className={classNames("custom-textarea")}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={product.description}
+          onChange={handleChange("description")}
         />
       </div>
+
       <div className={classNames("row-container")}>
         <InputField
-          label={"Price"}
-          value={price}
-          onChange={handlePriceChange}
-          error={!!priceError}
+          label="Price"
+          value={product.price}
+          onChange={handleChange("price")}
+          error={!!errors.price}
           showError={false}
         />
         <InputField
-          label={"Rent Price"}
-          value={rentalPrice}
-          onChange={handleRentalPriceChange}
-          error={!!rentalPriceError}
+          label="Rent Price"
+          value={product.rentalPrice}
+          onChange={handleChange("rentalPrice")}
+          error={!!errors.rentalPrice}
           showError={false}
         />
         <CustomSelect
-          label={"Duration"}
-          labelId={"rent-duration-label"}
-          value={rentDuration}
-          setValue={setRentDuration}
+          label="Duration"
+          labelId="rent-duration-label"
+          value={product.rentDuration}
+          setValue={(value) =>
+            setProduct((prev) => ({ ...prev, rentDuration: value }))
+          }
           options={RentDuration}
         />
       </div>
-      <div>
-        {priceError || rentalPriceError ? (
-          <FormHelperText error>
-            {priceError || rentalPriceError}
-          </FormHelperText>
-        ) : null}
-      </div>
+
+      {(errors.price || errors.rentalPrice) && (
+        <FormHelperText error>
+          {errors.price || errors.rentalPrice}
+        </FormHelperText>
+      )}
+
       <Button
         className={classNames("edit-button")}
-        disabled={isEditValid}
+        disabled={!isValid}
         onClick={submitDataForEdit}
       >
         Edit Product

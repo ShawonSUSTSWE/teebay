@@ -1,10 +1,17 @@
-export const prependToCacheList = ({ cache, query, fieldName, newItem }) => {
+export const prependToCacheList = ({
+  cache,
+  query,
+  variables = {},
+  fieldName,
+  newItem,
+}) => {
   try {
-    const data = cache.readQuery({ query });
+    const data = cache.readQuery({ query, variables });
     if (!data || !data[fieldName]) return;
 
     cache.writeQuery({
       query,
+      variables,
       data: {
         [fieldName]: [newItem, ...data[fieldName]],
       },

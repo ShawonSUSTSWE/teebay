@@ -1,8 +1,8 @@
 import TransactionSections from "@/lib/constants/TransactionSections";
 import TransactionHistory from "@/sections/user/transaction/TransactionHistory";
 
-const Page = ({ searchParams }) => {
-  const section = searchParams.section || TransactionSections.BOUGHT;
+const Page = async ({ searchParams }) => {
+  const { section = TransactionSections.BOUGHT } = await searchParams;
   return <TransactionHistory section={section} />;
 };
 

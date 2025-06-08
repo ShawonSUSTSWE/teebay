@@ -16,30 +16,73 @@ import useSession from "@/hooks/useSession";
 import { useRef, useState } from "react";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 import useOnClickOutside from "@/hooks/useOnClickOutside";
-import { BUY_PRODUCT, RENT_PRODUCT } from "@/actions/transactionActions";
+import {
+  BUY_PRODUCT,
+  RENT_PRODUCT,
+  TRANSACTION_LIST,
+} from "@/actions/transactionActions";
 import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
-import { removeFromCacheList } from "@/lib/utils/cacheUtils";
+import {
+  prependToCacheList,
+  removeFromCacheList,
+} from "@/lib/utils/cacheUtils";
 import RentalModal from "@/components/RentalModal/RentalModal";
+import TransactionType from "@/lib/constants/TransactionType";
+import TransactionSections from "@/lib/constants/TransactionSections";
 
 const classNames = getClassNames(styles);
+
+const createTransactionUpdater = (type) => {
+  return (cache, { data }) => {
+    const transaction =
+      type === TransactionType.BUY ? data?.buyProduct : data?.rentProduct;
+
+    if (!transaction) return;
+
+    if (type === TransactionType.BUY) {
+      removeFromCacheList({
+        cache,
+        query: GET_AVAILABLE_PRODUCTS,
+        fieldName: "getAllAvailableProducts",
+        removedItem: transaction.product,
+      });
+    }
+
+    const cacheTypeToUpdate = (
+      type === TransactionType.BUY
+        ? TransactionSections.BOUGHT
+        : TransactionSections.BORROWED
+    ).toUpperCase();
+
+    const updatedData = {
+      ...transaction,
+      rentDuration: transaction.product.rentDuration ?? null,
+      startDate: transaction.startDate ?? null,
+      endDate: transaction.endDate ?? null,
+    };
+
+    prependToCacheList({
+      cache,
+      query: TRANSACTION_LIST,
+      variables: {
+        type: cacheTypeToUpdate,
+      },
+      fieldName: "getMyTransactions",
+      newItem: updatedData,
+    });
+  };
+};
 
 export default function ProductDetailsSection({ id }) {
   const { data, loading, error } = useQuery(GET_PRODUCT_DETAILS, {
     variables: { id },
   });
   const [buyProductMutation] = useMutation(BUY_PRODUCT, {
-    update(cache, { data }) {
-      const removedProduct = data.buyProduct.product;
-
-      removeFromCacheList({
-        cache,
-        query: GET_AVAILABLE_PRODUCTS,
-        fieldName: "getAllAvailableProducts",
-        removedItem: removedProduct,
-      });
-    },
+    update: createTransactionUpdater(TransactionType.BUY),
   });
-  const [rentProductMutation] = useMutation(RENT_PRODUCT);
+  const [rentProductMutation] = useMutation(RENT_PRODUCT, {
+    update: createTransactionUpdater(TransactionType.RENT),
+  });
   const { user } = useSession();
   const router = useRouter();
   const [modalType, setModalType] = useState(null);

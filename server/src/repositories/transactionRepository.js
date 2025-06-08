@@ -43,6 +43,11 @@ class TransactionRepository {
         rentDuration,
         amount,
       },
+      include: {
+        product: true,
+        buyer: true,
+        seller: true,
+      },
     });
   }
 

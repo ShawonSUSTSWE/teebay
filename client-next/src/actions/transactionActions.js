@@ -7,6 +7,9 @@ export const BUY_PRODUCT = gql`
       product {
         id
         name
+        description
+        categories
+        createdAt
       }
       buyer {
         id
@@ -55,6 +58,9 @@ export const RENT_PRODUCT = gql`
       product {
         id
         name
+        description
+        categories
+        createdAt
       }
       buyer {
         id

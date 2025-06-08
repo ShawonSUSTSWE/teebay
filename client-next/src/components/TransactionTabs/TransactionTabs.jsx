@@ -22,16 +22,19 @@ export default function TransactionTabs() {
   return (
     <Box sx={{ width: "100%" }}>
       <Tabs
-        sx={{ padding: "0px 10px", width: "100%" }}
         value={current}
         onChange={handleChange}
+        variant="fullWidth"
+        aria-label="transaction tabs"
       >
         {tabs.map((tab) => (
           <Tab
-            sx={{ width: "100%", textTransform: "capitalize" }}
             key={tab}
             label={tab}
             value={tab}
+            sx={{
+              textTransform: "capitalize",
+            }}
           />
         ))}
       </Tabs>

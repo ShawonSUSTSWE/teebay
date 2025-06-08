@@ -81,6 +81,17 @@ class TransactionRepository {
 
     return latestRentTransaction?.endDate || null;
   }
+
+  async getRentalOverlap({ end, start, productId }) {
+    return await this.prisma.transaction.findFirst({
+      where: {
+        productId,
+        type: TransactionType.RENT,
+        startDate: { lte: end },
+        endDate: { gte: start },
+      },
+    });
+  }
 }
 
 export default TransactionRepository;

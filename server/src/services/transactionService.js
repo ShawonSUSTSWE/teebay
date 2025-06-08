@@ -1,3 +1,4 @@
+import prisma from "../config/DB.js";
 import ProductStatus from "../lib/constants/ProductStatus.js";
 import TransactionRepository from "../repositories/transactionRepository.js";
 import ProductService from "./productService.js";
@@ -40,13 +41,25 @@ class TransactionService {
   ) {
     const product = await productService.getProductById(productId);
     if (!product) throw new Error("Product not found");
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const durationInMs = end.getTime() - start.getTime();
+    if (durationInMs < 0) throw new Error("Invalid rental period");
+
     if (product.status === ProductStatus.RENTED) {
+      const overlappingRental =
+        await this.transactionRepository.getRentalOverlap({
+          end,
+          start,
+          productId,
+        });
+
+      if (overlappingRental) {
+        throw new Error("Product is already rented during this period");
+      }
     } else if (product.status !== ProductStatus.AVAILABLE) {
       throw new Error("Product not available for rent");
     }
-
-    const durationInMs = new Date(endDate) - new Date(startDate);
-    if (durationInMs <= 0) throw new Error("Invalid rental period");
 
     const result = await this.transactionRepository.prisma.$transaction(
       async (tx) => {

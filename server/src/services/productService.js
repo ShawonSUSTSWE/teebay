@@ -1,3 +1,4 @@
+import ProductStatus from "../lib/constants/ProductStatus.js";
 import ProductRepository from "../repositories/productRepository.js";
 
 class ProductService {
@@ -36,7 +37,12 @@ class ProductService {
   }
 
   async deleteProduct(id, user) {
-    await this.checkProductOwnership(id, user.id);
+    const product = await this.checkProductOwnership(id, user.id);
+    if (product.status === ProductStatus.RENTED) {
+      throw new Error(
+        "The product can not be deleted while it is being rented"
+      );
+    }
 
     return await this.productRepository.deleteProduct(id);
   }
@@ -62,9 +68,19 @@ class ProductService {
 
   async checkProductOwnership(productId, userId) {
     const product = await this.productRepository.getProductById(productId);
-    if (!product || product.ownerId !== userId) {
+    if (
+      !product ||
+      product.ownerId !== userId ||
+      product.status === ProductStatus.ARCHIVED
+    ) {
       throw new Error("You are not authorized to modify this product.");
     }
+    if (product.status === ProductStatus.SOLD) {
+      throw new Error(
+        "This product has already been sold. You can no longer modify this product"
+      );
+    }
+    return product;
   }
 }
 

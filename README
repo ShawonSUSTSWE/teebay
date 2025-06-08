@@ -4,7 +4,6 @@ Run the project using the following commands:
 
 docker-compose up --build
 
-In another terminal run these command to create the database tables and seed the category data:
+In another terminal run these command to create the database tables:
 
 docker exec teebay_server npx prisma db push
-docker exec teebay_server npm run seed

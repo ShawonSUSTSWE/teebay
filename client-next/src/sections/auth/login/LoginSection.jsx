@@ -9,7 +9,7 @@ import Button from "@/components/Button/Button";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { login } from "@/actions/authActions";
-import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
+import { showErrorToast } from "@/lib/utils/toastUtils";
 import { useRouter } from "next/navigation";
 import { loginValidationRules } from "@/lib/utils/validationRules";
 import InputField from "@/components/InputField/InputField";

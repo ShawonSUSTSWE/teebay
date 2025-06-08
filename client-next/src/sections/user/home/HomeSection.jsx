@@ -13,7 +13,7 @@ import {
   GET_OWNED_PRODUCTS_QUERY,
 } from "@/actions/productActions";
 import Loader from "@/components/Loader/Loader";
-import { showErrorToast } from "@/lib/utils/toastUtils";
+import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
 import { useRef, useState } from "react";
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal";
 import useOnClickOutside from "@/hooks/useOnClickOutside";

@@ -5,11 +5,12 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import prisma from "./src/config/DB.js";
 import cookieParser from "cookie-parser";
-import { clearCookie, verifyToken } from "./src/config/jwt.js";
+import { verifyToken } from "./src/config/jwt.js";
 import logGraphQLRequests from "./src/config/logger.js";
 import { schema } from "./src/graphql/schema/schema.js";
 import { createServices } from "./src/services/index.js";
 import authPlugin from "./src/config/authPlugin.js";
+import { GraphQLError } from "graphql";
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
@@ -18,7 +19,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:3000",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    methods: ["POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -29,6 +30,20 @@ app.use(logGraphQLRequests);
 const server = new ApolloServer({
   ...schema,
   plugins: [authPlugin],
+  formatError: (formattedError, error) => {
+    if (
+      error instanceof GraphQLError &&
+      !(
+        error.originalError instanceof TypeError ||
+        error.originalError instanceof ReferenceError
+      )
+    ) {
+      return formattedError;
+    }
+
+    console.error("Unexpected Error:", error);
+    return { message: "Something went wrong" };
+  },
 });
 
 await server.start();

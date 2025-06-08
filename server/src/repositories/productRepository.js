@@ -44,8 +44,9 @@ class ProductRepository {
   }
 
   async deleteProduct(id) {
-    return this.prisma.product.delete({
+    return this.prisma.product.update({
       where: { id },
+      data: { status: ProductStatus.ARCHIVED },
     });
   }
 
@@ -67,15 +68,15 @@ class ProductRepository {
 
   async getProductsByOwner(ownerId) {
     return this.prisma.product.findMany({
-      where: { ownerId },
+      where: { ownerId, status: { not: ProductStatus.ARCHIVED } },
       orderBy: {
         createdAt: "desc",
       },
     });
   }
 
-  async updateProductStatus(productId, newStatus, prisma = this.prisma) {
-    return prisma.product.update({
+  async updateProductStatus(productId, newStatus) {
+    return this.prisma.product.update({
       where: { id: productId },
       data: { status: newStatus },
     });

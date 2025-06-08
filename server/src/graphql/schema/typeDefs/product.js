@@ -6,8 +6,8 @@ export const productTypeDefs = gql`
   enum ProductStatus {
     AVAILABLE
     SOLD
-    PENDING
-    DRAFT
+    RENTED
+    ARCHIVED
   }
 
   enum RentDuration {

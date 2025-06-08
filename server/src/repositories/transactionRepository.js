@@ -6,11 +6,8 @@ class TransactionRepository {
     this.prisma = prisma;
   }
 
-  async createBuyTransaction(
-    { productId, buyerId, sellerId, amount },
-    prisma = this.prisma
-  ) {
-    return prisma.transaction.create({
+  async createBuyTransaction({ productId, buyerId, sellerId, amount }) {
+    return this.prisma.transaction.create({
       data: {
         productId,
         buyerId,
@@ -26,11 +23,16 @@ class TransactionRepository {
     });
   }
 
-  async createRentTransaction(
-    { productId, buyerId, sellerId, amount, startDate, endDate, rentDuration },
-    prisma = this.prisma
-  ) {
-    return prisma.transaction.create({
+  async createRentTransaction({
+    productId,
+    buyerId,
+    sellerId,
+    amount,
+    startDate,
+    endDate,
+    rentDuration,
+  }) {
+    return this.prisma.transaction.create({
       data: {
         productId,
         buyerId,
@@ -58,6 +60,26 @@ class TransactionRepository {
         createdAt: "desc",
       },
     });
+  }
+
+  async getLatestRentEndDate(productId) {
+    const latestRentTransaction = await this.prisma.transaction.findFirst({
+      where: {
+        productId,
+        type: "RENT",
+        endDate: {
+          not: null,
+        },
+      },
+      orderBy: {
+        endDate: "desc",
+      },
+      select: {
+        endDate: true,
+      },
+    });
+
+    return latestRentTransaction?.endDate || null;
   }
 }
 

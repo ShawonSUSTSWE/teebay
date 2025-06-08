@@ -1,4 +1,6 @@
+import ProductStatus from "../lib/constants/ProductStatus.js";
 import TransactionRepository from "../repositories/transactionRepository.js";
+import ProductService from "./productService.js";
 
 class TransactionService {
   constructor(prisma) {
@@ -8,18 +10,27 @@ class TransactionService {
   async buyProduct({ productId }, buyerId, productService) {
     const product = await productService.getProductById(productId);
     if (!product) throw new Error("Product not found");
-    if (product.status !== "AVAILABLE")
+    if (product.status !== ProductStatus.AVAILABLE)
       throw new Error("Product not available for purchase");
 
-    const transaction = await this.transactionRepository.createBuyTransaction({
-      productId,
-      buyerId,
-      sellerId: product.ownerId,
-      amount: product.price,
-    });
+    const result = await this.transactionRepository.prisma.$transaction(
+      async (tx) => {
+        const transactionRepo = new TransactionRepository(tx);
+        const transactionProductService = new ProductService(tx);
 
-    await productService.updateProductStatus(productId, "SOLD");
-    return transaction;
+        const transaction = await transactionRepo.createBuyTransaction({
+          productId,
+          buyerId,
+          sellerId: product.ownerId,
+          amount: product.price,
+        });
+
+        await transactionProductService.updateProductStatus(productId, "SOLD");
+        return transaction;
+      }
+    );
+
+    return result;
   }
 
   async rentProduct(
@@ -29,22 +40,38 @@ class TransactionService {
   ) {
     const product = await productService.getProductById(productId);
     if (!product) throw new Error("Product not found");
-    if (product.status !== "AVAILABLE")
+    if (product.status === ProductStatus.RENTED) {
+    } else if (product.status !== ProductStatus.AVAILABLE) {
       throw new Error("Product not available for rent");
+    }
 
     const durationInMs = new Date(endDate) - new Date(startDate);
     if (durationInMs <= 0) throw new Error("Invalid rental period");
 
-    const transaction = await this.transactionRepository.createRentTransaction({
-      productId,
-      buyerId,
-      sellerId: product.ownerId,
-      amount: product.rentalPrice,
-      startDate,
-      endDate,
-      rentDuration: product.rentDuration,
-    });
-    return transaction;
+    const result = await this.transactionRepository.prisma.$transaction(
+      async (tx) => {
+        const transactionRepo = new TransactionRepository(tx);
+        const transactionProductService = new ProductService(tx);
+
+        const transaction = await transactionRepo.createRentTransaction({
+          productId,
+          buyerId,
+          sellerId: product.ownerId,
+          amount: product.rentalPrice,
+          startDate,
+          endDate,
+          rentDuration: product.rentDuration,
+        });
+
+        await transactionProductService.updateProductStatus(
+          productId,
+          "RENTED"
+        );
+        return transaction;
+      }
+    );
+
+    return result;
   }
 
   async getUserTransactions(userId, transactionType) {
@@ -52,6 +79,10 @@ class TransactionService {
       userId,
       transactionType
     );
+  }
+
+  async getLatestRentEndDate(productId) {
+    return this.transactionRepository.getLatestRentEndDate(productId);
   }
 }
 

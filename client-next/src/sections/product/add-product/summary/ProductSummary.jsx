@@ -15,6 +15,7 @@ import {
 } from "@/actions/productActions";
 import { showErrorToast } from "@/lib/utils/toastUtils";
 import { prependToCacheList } from "@/lib/utils/cacheUtils";
+import { PageRoutes } from "@/lib/utils/routeUtils";
 
 const classNames = getClassNames(styles);
 
@@ -50,8 +51,8 @@ export default function ProductSummary({}) {
     router.back();
   };
 
-  const handleNext = () => {
-    router.push("/");
+  const handleNext = async () => {
+    await router.push(PageRoutes.home);
   };
 
   const createProduct = async () => {
@@ -77,8 +78,9 @@ export default function ProductSummary({}) {
       await addProduct({
         variables: { data: productData, categoryNames: categories },
       });
-      resetForm();
-      handleNext();
+      handleNext().then(() => {
+        resetForm();
+      });
     } catch (error) {
       showErrorToast(error.message);
     }

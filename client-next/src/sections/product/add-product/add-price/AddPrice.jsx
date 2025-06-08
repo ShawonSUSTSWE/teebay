@@ -102,6 +102,7 @@ export default function AddPrice({}) {
           value={rentDuration}
           setValue={setRentDuration}
           options={RentDuration}
+          clearable
         />
       </div>
       {rentalPriceError && (

@@ -24,17 +24,16 @@ export default function AddProductFormStep({
   const [fieldValue, setFieldValue] = useState(formData[fieldKey] || "");
 
   useEffect(() => {
-    console.log({ formData });
     setFieldValue(formData[fieldKey]);
   }, [formData, fieldKey]);
 
   const handleBack = () => {
-    updateForm({ [fieldKey]: fieldValue });
+    updateForm({ [fieldKey]: fieldValue.trim() });
     router.back();
   };
 
   const handleNext = () => {
-    updateForm({ [fieldKey]: fieldValue });
+    updateForm({ [fieldKey]: fieldValue.trim() });
     const nextRoute = routeToNextProductCreatePage(pathname);
     router.push(nextRoute);
   };
@@ -63,7 +62,7 @@ export default function AddProductFormStep({
         ) : (
           <div></div>
         )}
-        <Button onClick={handleNext} disabled={validateNext(fieldValue)}>
+        <Button onClick={handleNext} disabled={validateNext(fieldValue.trim())}>
           Next
         </Button>
       </div>

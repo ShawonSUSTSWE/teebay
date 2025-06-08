@@ -164,6 +164,7 @@ export default function EditProduct({ id }) {
             setProduct((prev) => ({ ...prev, rentDuration: value }))
           }
           options={RentDuration}
+          clearable
         />
       </div>
 

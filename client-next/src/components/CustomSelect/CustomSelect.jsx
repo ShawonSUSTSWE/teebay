@@ -7,6 +7,7 @@ export default function CustomSelect({
   value,
   setValue,
   options,
+  clearable = false,
 }) {
   return (
     <FormControl fullWidth>
@@ -18,6 +19,11 @@ export default function CustomSelect({
         size={size}
         label={label}
       >
+        {clearable && (
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+        )}
         {Object.entries(options).map(([key, value]) => (
           <MenuItem value={key}>{value}</MenuItem>
         ))}

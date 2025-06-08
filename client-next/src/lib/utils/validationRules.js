@@ -9,6 +9,7 @@ export const signupValidationRules = {
   },
   address: {
     required: "Address is required",
+    validate: (value) => value.trim() !== "" || "Address cannot be empty",
   },
   email: {
     required: "Email is required",
@@ -29,6 +30,13 @@ export const signupValidationRules = {
     minLength: {
       value: 6,
       message: "Password must be at least 6 characters",
+    },
+    validate: (value) => {
+      const trimmed = value.trim();
+      if (trimmed.length < 6)
+        return "Password must be at least 6 non-space characters";
+      if (trimmed === "") return "Password cannot be empty or just spaces";
+      return true;
     },
   },
   confirmPassword: (getValues) => ({

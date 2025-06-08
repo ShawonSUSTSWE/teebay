@@ -61,8 +61,9 @@ export default function EditProduct({ id }) {
     }
   }, [data]);
 
-  const handleChange = (field) => (e) => {
+  const handleChange = (e) => {
     const value = e.target.value;
+    const field = e.target.name;
 
     setProduct((prev) => ({ ...prev, [field]: value }));
 
@@ -80,8 +81,8 @@ export default function EditProduct({ id }) {
   };
 
   const isValid =
-    product.title &&
-    product.description &&
+    product.title.trim() &&
+    product.description.trim() &&
     !isEmptyArray(categories) &&
     ((product.price && !product.rentalPrice && !product.rentDuration) ||
       (product.rentalPrice && product.rentDuration)) &&
@@ -94,8 +95,8 @@ export default function EditProduct({ id }) {
         variables: {
           id,
           data: {
-            name: product.title,
-            description: product.description,
+            name: product.title.trim(),
+            description: product.description.trim(),
             price: product.price ? Number(product.price) : null,
             rentalPrice: product.rentalPrice
               ? Number(product.rentalPrice)
@@ -118,9 +119,10 @@ export default function EditProduct({ id }) {
   return (
     <div className={classNames("container")}>
       <InputField
+        name="title"
         label="Title"
         value={product.title}
-        onChange={handleChange("title")}
+        onChange={handleChange}
       />
 
       <div className={classNames("categories-container")}>
@@ -135,24 +137,27 @@ export default function EditProduct({ id }) {
       <div className={classNames("categories-container")}>
         <label>Description</label>
         <textarea
+          name="description"
           className={classNames("custom-textarea")}
           value={product.description}
-          onChange={handleChange("description")}
+          onChange={handleChange}
         />
       </div>
 
       <div className={classNames("row-container")}>
         <InputField
+          name="price"
           label="Price"
           value={product.price}
-          onChange={handleChange("price")}
+          onChange={handleChange}
           error={!!errors.price}
           showError={false}
         />
         <InputField
+          name="rentalPrice"
           label="Rent Price"
           value={product.rentalPrice}
-          onChange={handleChange("rentalPrice")}
+          onChange={handleChange}
           error={!!errors.rentalPrice}
           showError={false}
         />

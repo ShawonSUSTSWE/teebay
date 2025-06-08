@@ -51,6 +51,7 @@ export default function HomeSection() {
   const deleteProduct = async () => {
     try {
       await deleteProductMutation({ variables: { id: productToBeDeleted } });
+      showSuccessToast("Product deleted successfully");
     } catch (error) {
       showErrorToast(error.message);
     }

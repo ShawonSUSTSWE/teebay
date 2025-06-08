@@ -13,7 +13,7 @@ import {
   GET_AVAILABLE_PRODUCTS,
   GET_OWNED_PRODUCTS_QUERY,
 } from "@/actions/productActions";
-import { showErrorToast } from "@/lib/utils/toastUtils";
+import { showErrorToast, showSuccessToast } from "@/lib/utils/toastUtils";
 import { prependToCacheList } from "@/lib/utils/cacheUtils";
 import { PageRoutes } from "@/lib/utils/routeUtils";
 
@@ -74,6 +74,7 @@ export default function ProductSummary({}) {
       await addProduct({
         variables: { data: productData, categoryNames: categories },
       });
+      showSuccessToast("Product created successfully");
       handleNext().then(() => {
         resetForm();
       });

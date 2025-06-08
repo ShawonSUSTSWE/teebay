@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { loginValidationRules } from "@/lib/utils/validationRules";
 import InputField from "@/components/InputField/InputField";
 import { useApolloClient } from "@apollo/client";
+import { PageRoutes } from "@/lib/utils/routeUtils";
 
 const classNames = getClassNames(styles);
 
@@ -61,7 +62,7 @@ export default function LoginSection() {
         />
         <Button className={classNames("login-btn")}>LOGIN</Button>
         <p className={classNames("signup-link")}>
-          Don't have an account? <Link href="/signup">Signup</Link>
+          Don't have an account? <Link href={PageRoutes.signup}>Signup</Link>
         </p>
       </FormContainer>
     </div>

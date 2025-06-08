@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import styles from "./TransactionHistory.module.css";
 import ProductList from "@/components/ProductList/ProductList";
 import TransactionType from "@/lib/constants/TransactionType";
+import { useMemo } from "react";
 
 const classNames = getClassNames(styles);
 
@@ -22,8 +23,8 @@ export default function TransactionHistory({ section }) {
 
   const transactions = productsList?.getMyTransactions || [];
 
-  const products =
-    transactions.length > 0
+  const products = useMemo(() => {
+    return transactions.length > 0
       ? transactions.map((transaction) => ({
           ...transaction.product,
           ...(transaction.type === TransactionType.BUY
@@ -31,9 +32,12 @@ export default function TransactionHistory({ section }) {
             : {
                 rentPrice: transaction.amount,
                 rentDuration: transaction.rentDuration,
+                rentStartDate: transaction.startDate,
+                rentEndDate: transaction.endDate,
               }),
         }))
       : [];
+  }, [transactions]);
 
   if (loading) {
     return <Loader />;

@@ -1,4 +1,6 @@
 export const PageRoutes = {
+  login: `/login`,
+  signup: `/signup`,
   productEditPage: (id) => `/products/${id}/edit`,
   productDetailsPage: (id) => `/products/${id}`,
   home: `/home`,
@@ -15,9 +17,6 @@ export const PageRoutes = {
 
 export const routeToNextProductCreatePage = (currentPage) => {
   const pagesList = Object.values(PageRoutes.productCreate);
-  console.log(pagesList);
-  console.log(currentPage);
   const nextPage = pagesList[pagesList.indexOf(currentPage) + 1];
-  console.log(nextPage);
   return nextPage;
 };

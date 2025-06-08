@@ -1,7 +1,4 @@
-import {
-  formatDateToLocaleString,
-  getClassNames,
-} from "@/lib/utils/commonUtils";
+import { getClassNames } from "@/lib/utils/commonUtils";
 import styles from "./ProductCard.module.css";
 import { Delete } from "@mui/icons-material";
 import Link from "next/link";

@@ -15,6 +15,7 @@ import { showErrorToast } from "@/lib/utils/toastUtils";
 import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useApolloClient } from "@apollo/client";
+import { PageRoutes } from "@/lib/utils/routeUtils";
 
 const classNames = getClassNames(styles);
 
@@ -117,7 +118,7 @@ export default function SignupSection() {
           REGISTER
         </Button>
         <p className={classNames("signup-link")}>
-          Already have an account? <Link href="/login">Sign in</Link>
+          Already have an account? <Link href={PageRoutes.login}>Sign in</Link>
         </p>
       </FormContainer>
     </div>

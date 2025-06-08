@@ -1,4 +1,3 @@
-import prisma from "../config/DB.js";
 import ProductStatus from "../lib/constants/ProductStatus.js";
 import TransactionRepository from "../repositories/transactionRepository.js";
 import ProductService from "./productService.js";

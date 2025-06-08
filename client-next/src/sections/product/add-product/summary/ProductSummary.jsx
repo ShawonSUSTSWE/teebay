@@ -43,10 +43,6 @@ export default function ProductSummary({}) {
     },
   });
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const handleBack = () => {
     router.back();
   };

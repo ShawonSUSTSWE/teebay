@@ -6,9 +6,6 @@ import { getClassNames } from "@/lib/utils/commonUtils";
 import { showErrorToast } from "@/lib/utils/toastUtils";
 import { useQuery } from "@apollo/client";
 import styles from "./TransactionHistory.module.css";
-import ProductList from "@/components/ProductList/ProductList";
-import TransactionType from "@/lib/constants/TransactionType";
-import { useMemo } from "react";
 import TransactionCard from "@/components/TransactionCard/TransactionCard";
 
 const classNames = getClassNames(styles);
@@ -23,22 +20,6 @@ export default function TransactionHistory({ section }) {
   });
 
   const transactions = productsList?.getMyTransactions || [];
-
-  // const products = useMemo(() => {
-  //   return transactions.length > 0
-  //     ? transactions.map((transaction) => ({
-  //         ...transaction.product,
-  //         ...(transaction.type === TransactionType.BUY
-  //           ? { price: transaction.amount }
-  //           : {
-  //               rentalPrice: transaction.amount,
-  //               rentDuration: transaction.rentDuration,
-  //               rentStartDate: transaction.startDate,
-  //               rentEndDate: transaction.endDate,
-  //             }),
-  //       }))
-  //     : [];
-  // }, [transactions]);
 
   if (loading) {
     return <Loader />;

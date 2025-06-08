@@ -11,6 +11,7 @@ import { schema } from "./src/graphql/schema/schema.js";
 import { createServices } from "./src/services/index.js";
 import authPlugin from "./src/config/authPlugin.js";
 import { GraphQLError } from "graphql";
+import "./src/crons/updateRentalStatus.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
